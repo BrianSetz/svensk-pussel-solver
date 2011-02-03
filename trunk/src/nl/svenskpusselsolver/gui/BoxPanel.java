@@ -8,21 +8,30 @@ import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * Represents a box within the puzzle.
+ */
 public class BoxPanel extends JPanel {
-	public static final int TYPE_BOX = 0;
-	public static final int TYPE_WORDBOX = 1;
-	public static final int TYPE_LETTERBOX = 2;
+	public static final int TYPE_BOX = 0; // Normal box, contains nothing
+	public static final int TYPE_WORDBOX = 1; // Word box, contains the word to find a synonym for
+	public static final int TYPE_LETTERBOX = 2; // Letter box, contains the letter of a word
 	
-	private int type = TYPE_BOX;
+	private int type = TYPE_LETTERBOX; // Initial box is letter box
 	
 	public BoxPanel() {
 		super();
 		
-		this.setPreferredSize(new Dimension(25, 25));
-		this.updateType(type);		
+		// Initialize box
+		this.updateType(type);
 		this.addMouseListener(new BoxPanelMouseListener(this));
+		
+		this.setPreferredSize(new Dimension(25, 25)); // Makes the layout manager happy					
 	}
 
+	/**
+	 * Update the type of the box.
+	 * @param newType New type of the box.
+	 */
 	private void updateType(int newType) {
 		type = newType;
 		
