@@ -30,14 +30,21 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		Pattern pattern = Pattern.compile("[^;]<font color=navy>(.*?)<");
-		Matcher matcher = pattern.matcher(page);
+		
+		//Get the rows 
+		Pattern pagePattern = Pattern.compile("(background-color:#ddd>(<big){0})(((<font)|[^<]).*?)</td>");
+		Pattern wordPattern = Pattern.compile("(\\s|>|^)([^ -<>]+?)(\\s|<|$)");
+		
+		Matcher matcher = pagePattern.matcher(page);
 
 		List<String> answers = new ArrayList<String>();
 		
 		while (matcher.find()) {
-			answers.add(matcher.group(1));
+			Matcher matcher2 = wordPattern.matcher(matcher.group(3));
+
+			while (matcher2.find()) {
+				answers.add(matcher2.group(2));
+			}
 		}
 
 		return answers;
