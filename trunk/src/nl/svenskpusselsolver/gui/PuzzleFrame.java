@@ -13,14 +13,15 @@ public class PuzzleFrame extends JFrame {
 		contentPane = this.getContentPane();
 
 		this.initializePuzzle(10, 20);
-
-		contentPane.setBackground(Color.black);
+		
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Svensk Pussel Solver");
 		this.pack();
 		this.setVisible(true);
 	}
 
 	private void initializePuzzle(int x, int y) {
+		contentPane.setBackground(Color.black);
 		contentPane.setLayout(new GridLayout(y, x, 1, 1));
 
 		for (int i = 0; i < y; i++) {
