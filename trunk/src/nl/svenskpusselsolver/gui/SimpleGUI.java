@@ -21,47 +21,47 @@ public class SimpleGUI extends JFrame {
 	private JTextField countField;
 	private JButton searchButton;
 	private JComboBox resultComboBox;
-	
-	public SimpleGUI() {		
+
+	public SimpleGUI() {
 		Container content = this.getContentPane();
-		content.setLayout(new GridLayout(0,2,20,0));
-		
+		content.setLayout(new GridLayout(0, 2, 20, 0));
+
 		content.add(new JLabel("Woord:"));
 		wordField = new JTextField();
 		content.add(wordField);
-		
+
 		content.add(new JLabel("Letters:"));
-		countField = new JTextField();		
+		countField = new JTextField();
 		content.add(countField);
-		
+
 		searchButton = new JButton("Zoek");
 		searchButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				PuzzleDictionary pwb = new MijnWoordenBoekDotNL();
-				
+
 				int count = -1;
 				try {
 					count = Integer.parseInt(countField.getText());
-				}catch(NumberFormatException e) {					
+				} catch (NumberFormatException e) {
 				}
-				
+
 				List<String> words = pwb.getAnswers(wordField.getText(), count);
-								
+
 				resultComboBox.removeAllItems();
-				for(String word : words) {		
+				for (String word : words) {
 					resultComboBox.addItem(word);
 				}
-				
+
 				pack();
 			}
 		});
-		
+
 		content.add(searchButton);
 		resultComboBox = new JComboBox();
 		content.add(resultComboBox);
-		
+
 		this.setTitle("Svensk Pussel Solver");
 		this.pack();
 		this.setVisible(true);
