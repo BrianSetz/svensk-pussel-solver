@@ -14,3 +14,4 @@ public interface PuzzleDictionary {
      */
 	public List<String> getAnswers(String word, int length);
 }
+
