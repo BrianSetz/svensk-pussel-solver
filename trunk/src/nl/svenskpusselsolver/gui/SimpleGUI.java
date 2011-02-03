@@ -12,17 +12,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import nl.svenskpusselsolver.woordenboek.MijnWoordenBoekDotNL;
-import nl.svenskpusselsolver.woordenboek.PuzzelDictionary;
+import nl.svenskpusselsolver.dictionary.MijnWoordenBoekDotNL;
+import nl.svenskpusselsolver.dictionary.PuzzleDictionary;
 
 @SuppressWarnings("serial")
-public class MainGUI extends JFrame {
+public class SimpleGUI extends JFrame {
 	private JTextField wordField;
 	private JTextField countField;
 	private JButton searchButton;
 	private JComboBox resultComboBox;
 	
-	public MainGUI() {		
+	public SimpleGUI() {		
 		Container content = this.getContentPane();
 		content.setLayout(new GridLayout(0,2,20,0));
 		
@@ -39,7 +39,7 @@ public class MainGUI extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				PuzzelDictionary pwb = new MijnWoordenBoekDotNL();
+				PuzzleDictionary pwb = new MijnWoordenBoekDotNL();
 				
 				int count = -1;
 				try {
