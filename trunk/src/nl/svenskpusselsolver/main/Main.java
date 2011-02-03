@@ -1,3 +1,4 @@
+package nl.svenskpusselsolver.main;
 import nl.svenskpusselsolver.gui.MainGUI;
 
 
