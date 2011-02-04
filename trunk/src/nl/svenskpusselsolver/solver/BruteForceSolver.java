@@ -12,7 +12,7 @@ import nl.svenskpusselsolver.logging.Logger;
 
 public class BruteForceSolver implements Solver {
 	private Box[][] grid;
-	private List<String>[][] answerGrid;
+	private List<String>[][] possibleAnswersGrid;
 	
 	private PuzzleDictionary puzzleDictionary;
 	
@@ -23,78 +23,78 @@ public class BruteForceSolver implements Solver {
 	@Override
 	public Box[][] solvePuzzle(Box[][] grid) {		
 		this.grid = grid;		
-		this.answerGrid = new List[grid.length][grid[0].length];
+		this.possibleAnswersGrid = new List[grid.length][grid[0].length];
 		
 		
-		// Find words with one answer
+		// Download all answers available for words.
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {			
 				if(grid[x][y] instanceof WordBox) {
 					WordBox wordBox = (WordBox) grid[x][y];
 					int length = getWordLength(wordBox);
-					Logger.log(Logger.TRACE, "Checking answers for " + wordBox.getWord() + ".");
-					List<String> answers = puzzleDictionary.getAnswers(wordBox.getWord(), length);
-					answerGrid[x][y] = answers;
-										
-					if(answers.size() == 1) {
-						Logger.log(Logger.DEBUG, "Found a word with a single answer, for " + wordBox.getWord() + ": " + answers.get(0) +  ".");
-						setWord(wordBox, answers.get(0));
-					}						
+					Logger.log(Logger.TRACE, "Downloading answers for " + wordBox.getWord() + ".");
+					List<String> possibleAnswers = puzzleDictionary.getAnswers(wordBox.getWord(), length);
+					possibleAnswersGrid[x][y] = possibleAnswers;				
 				}
 			}
 		}	
 		
 		boolean changesInGrid = true;
 
-		// Find words that fit in the current situation, words with one fitting answer
+		// Find words that fit in the current situation, those are 
+		// words with one fitting answer. As long as answers are being 
+		// found, continue.
 		while(changesInGrid) {
 			changesInGrid = false;
 			for (int x = 0; x < grid.length; x++) {
 				for (int y = 0; y < grid[0].length; y++) {			
 					if(grid[x][y] instanceof WordBox) {
 						WordBox wordBox = (WordBox) grid[x][y];
-						List<String> answers = answerGrid[x][y];
+						List<String> possibleAnswers = possibleAnswersGrid[x][y];
 						Logger.log(Logger.TRACE, "Checking answers for " + wordBox.getWord() + ".");
 						
-						if(answers.size() <= 0) {
+						if(possibleAnswers.size() <= 0) {
 							Logger.log(Logger.TRACE, "Skipping " + wordBox.getWord() + ", already answered or no answers available.");
 							continue;
 						}
 						
 						int answerCount = 0;
-						for (Iterator<String> iter = answers.iterator(); iter.hasNext();) {
+						for (Iterator<String> iter = possibleAnswers.iterator(); iter.hasNext();) {
 							String answer = iter.next();
 							if(isPossibleAnswer(wordBox, answer)) {
 								Logger.log(Logger.DEBUG, "Found a word with a possible answer, for " + wordBox.getWord() + ": " + answer +  ".");
 								answerCount++;								
 							} else {
+								Logger.log(Logger.TRACE, "Answer will not fit for" + wordBox.getWord() + ". removing: " + answer +  ".");
 								iter.remove();
 							}
 						}
 						
 						if(answerCount == 1) {
-							Logger.log(Logger.DEBUG, "Word has a single possible answer, for " + wordBox.getWord() + ": " + answers.get(0) +  ".");
+							Logger.log(Logger.DEBUG, "Found a word with a single answer, for " + wordBox.getWord() + ": " + possibleAnswers.get(0) +  ".");
 							changesInGrid = true;
-							setWord(wordBox, answers.get(0));
-							answers.remove(0);
+							setWord(wordBox, possibleAnswers.get(0));
+							possibleAnswers.remove(0);
 						}
 					}
 				}
 			}
 		}
-		return grid;
+		
+		//TODO: Brute force remaining answers.
 		
 		
+		return grid;		
 	}
 
 	private boolean isPossibleAnswer(WordBox wordBox, String word) {
+		Logger.log(Logger.DEBUG, "Checking if " + word + " is a possible answer for: " + wordBox.getWord() + ".");
+		
 		int x = wordBox.getXCoordinate();
 		int y = wordBox.getYCoordinate();
 		
-		int length = 0;
-		
+		int length = 0;		
 		boolean couldFit = true;
-		
 		if(wordBox.getDirection() == WordBox.DIRECTION_UP) {
 			y--;
 			while(grid[x][y] instanceof LetterBox) {
@@ -113,6 +113,7 @@ public class BruteForceSolver implements Solver {
 				if(((LetterBox)grid[x][y]).getLetter() != '\u0000' && ((LetterBox)grid[x][y]).getLetter() != ' ')
 					if(((LetterBox)grid[x][y]).getLetter() != word.charAt(length))
 						return false;
+				
 				length++;
 				x++;				
 				if(x > grid.length - 1)
@@ -124,6 +125,7 @@ public class BruteForceSolver implements Solver {
 				if(((LetterBox)grid[x][y]).getLetter() != '\u0000' && ((LetterBox)grid[x][y]).getLetter() != ' ')
 					if(((LetterBox)grid[x][y]).getLetter() != word.charAt(length))
 						return false;
+				
 				length++;
 				y++;
 				if(y > grid.length - 1)
@@ -135,6 +137,7 @@ public class BruteForceSolver implements Solver {
 				if(((LetterBox)grid[x][y]).getLetter() != '\u0000' && ((LetterBox)grid[x][y]).getLetter() != ' ')
 					if(((LetterBox)grid[x][y]).getLetter() != word.charAt(length))
 						return false;
+				
 				length++;
 				x--;								
 				if(x < 0)
@@ -206,7 +209,8 @@ public class BruteForceSolver implements Solver {
 			while(grid[x][y] instanceof LetterBox) {
 				((LetterBox)grid[x][y]).setLetter(word.charAt(length));
 				length++;
-				y--;							
+				y--;
+				
 				if(y < 0)
 					break;
 			}
@@ -215,7 +219,8 @@ public class BruteForceSolver implements Solver {
 			while(grid[x][y] instanceof LetterBox) {
 				((LetterBox)grid[x][y]).setLetter(word.charAt(length));
 				length++;
-				x++;				
+				x++;	
+				
 				if(x > grid.length - 1)
 					break;
 			}
@@ -225,6 +230,7 @@ public class BruteForceSolver implements Solver {
 				((LetterBox)grid[x][y]).setLetter(word.charAt(length));
 				length++;
 				y++;
+				
 				if(y > grid.length - 1)
 					break;
 			}
@@ -233,7 +239,8 @@ public class BruteForceSolver implements Solver {
 			while(grid[x][y] instanceof LetterBox) {
 				((LetterBox)grid[x][y]).setLetter(word.charAt(length));
 				length++;
-				x--;								
+				x--;	
+				
 				if(x < 0)
 					break;
 			}
