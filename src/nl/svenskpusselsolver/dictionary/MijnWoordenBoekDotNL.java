@@ -10,7 +10,7 @@ import nl.svenskpusselsolver.logging.Logger;
 import nl.svenskpusselsolver.util.URLReader;
 
 /**
- * Implementation of the PuzzelDictionary inteface, uses MijnWoordenBoek.nl to
+ * Implementation of the PuzzelDictionary interface, uses MijnWoordenBoek.nl to
  * find answers.
  */
 public class MijnWoordenBoekDotNL implements PuzzleDictionary {
@@ -24,6 +24,8 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 	 * @return List of answers.
 	 */
 	public List<String> getAnswers(String word, int length) {
+		Logger.log(Logger.DEBUG, "Downloading answers for " + word + " with a length of " + length +  ".");
+		
 		// Try to read the contents at the URL.
 		String page = "";
 		try {
@@ -47,8 +49,8 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 				answers.add(matcher2.group(2));
 			}
 		}
-
-		Logger.Log(0, "Got " + answers.size() + " answers for " + word);
+		
+		Logger.log(Logger.DEBUG, "Found " + answers.size() + " answers for " + word + " with a length of " + length +  ".");
 		
 		return answers;
 	}
