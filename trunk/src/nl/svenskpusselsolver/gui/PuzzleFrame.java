@@ -11,12 +11,15 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import nl.svenskpusselsolver.dataobjects.Box;
+
 /**
  * This is the main frame of the puzzle GUI.
  */
 public class PuzzleFrame extends JFrame {
 	private Container contentPane;
-
+	private BoxPanel[][] boxPanelGrid;
+	
 	/**
 	 * Puzzle frame contains all the boxes.
 	 */
@@ -51,6 +54,15 @@ public class PuzzleFrame extends JFrame {
 		this.setVisible(true);
 	}
 
+	public PuzzleFrame(Box[][] grid) {	
+		this();
+		
+		for (int y = 0; y < grid[0].length; y++) {
+			for (int x = 0; x < grid.length; x++) {
+				boxPanelGrid[y][x].setBox(grid[x][y]);
+			}
+		}		
+	}
 	/**
 	 * Initialize puzzle grid
 	 * 
@@ -60,12 +72,16 @@ public class PuzzleFrame extends JFrame {
 	 *            Boxes on y-axis
 	 */
 	private void initializePuzzle(int x, int y) {
+		boxPanelGrid = new BoxPanel[x][y];		
 		contentPane.setBackground(Color.black);
 		contentPane.setLayout(new GridLayout(y, x, 1, 1));
 
+		// Create all boxes
 		for (int i = 0; i < y; i++) {
 			for (int j = 0; j < x; j++) {
-				contentPane.add(new BoxPanel()); // New box
+				BoxPanel bp = new BoxPanel(j, i);
+				contentPane.add(bp); // New box
+				boxPanelGrid[j][i] = bp; // Store reference in grid
 			}
 		}
 	}
