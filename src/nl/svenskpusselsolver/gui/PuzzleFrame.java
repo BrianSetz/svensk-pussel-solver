@@ -12,6 +12,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import nl.svenskpusselsolver.dataobjects.Box;
+import nl.svenskpusselsolver.solver.BruteForceSolver;
 
 /**
  * This is the main frame of the puzzle GUI.
@@ -19,6 +20,7 @@ import nl.svenskpusselsolver.dataobjects.Box;
 public class PuzzleFrame extends JFrame {
 	private Container contentPane;
 	private BoxPanel[][] boxPanelGrid;
+	private Box[][] grid;
 	
 	/**
 	 * Puzzle frame contains all the boxes.
@@ -35,8 +37,24 @@ public class PuzzleFrame extends JFrame {
 		// Add File menu
 		JMenu file = new JMenu("File");
 		file.setMnemonic('F');		
-		bar.add(file);
-		
+		bar.add(file);			
+
+		// Add Solve item
+		JMenuItem solveItem = new JMenuItem("Solve");
+		solveItem.setMnemonic('s');
+		solveItem.addActionListener(new ActionListener() {		
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+			Box[][] newGrid = new BruteForceSolver().solvePuzzle(grid);
+			for (int y = 0; y < newGrid[0].length; y++) {
+				for (int x = 0; x < newGrid.length; x++) {
+					boxPanelGrid[x][y].setBox(newGrid[x][y]);
+				}
+			}	
+		}	
+		});
+		file.add(solveItem);
+
 		// Add Exit item
 		JMenuItem exitItem = new JMenuItem("Exit");
 		exitItem.setMnemonic('x');
@@ -46,8 +64,8 @@ public class PuzzleFrame extends JFrame {
 				dispose();
 			}
 		});
-		file.add(exitItem);				
-
+		file.add(exitItem);	
+		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Svensk Pussel Solver");
 		this.pack();
@@ -57,9 +75,11 @@ public class PuzzleFrame extends JFrame {
 	public PuzzleFrame(Box[][] grid) {	
 		this();
 		
+		this.grid = grid;
+		
 		for (int y = 0; y < grid[0].length; y++) {
 			for (int x = 0; x < grid.length; x++) {
-				boxPanelGrid[y][x].setBox(grid[x][y]);
+				boxPanelGrid[x][y].setBox(grid[x][y]);
 			}
 		}		
 	}

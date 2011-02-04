@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import nl.svenskpusselsolver.logging.Logger;
 import nl.svenskpusselsolver.util.URLReader;
 
 /**
@@ -47,6 +48,8 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 			}
 		}
 
+		Logger.Log(0, "Got " + answers.size() + " answers for " + word);
+		
 		return answers;
 	}
 
