@@ -19,6 +19,7 @@ import nl.svenskpusselsolver.dataobjects.Box;
 import nl.svenskpusselsolver.dataobjects.LetterBox;
 import nl.svenskpusselsolver.dataobjects.StaticBox;
 import nl.svenskpusselsolver.dataobjects.WordBox;
+import nl.svenskpusselsolver.logging.Logger;
 
 /**
  * Represents a box within the puzzle.
@@ -48,6 +49,8 @@ public class BoxPanel extends JPanel {
 	 */
 	public BoxPanel(int xCoordinate, int yCoordinate) {
 		super();
+		
+		Logger.log(Logger.TRACE, "Building BoxPanel (" + xCoordinate + "," + yCoordinate + ").");
 		
 		// Init coordinates
 		this.xCoordinate = xCoordinate;
@@ -79,6 +82,8 @@ public class BoxPanel extends JPanel {
 		this.setPreferredSize(new Dimension(75, 75)); 	// Makes the layout
 														// manager happy
 		this.updateType(type); // Update
+		
+		Logger.log(Logger.INFO, "BoxPanel built (" + xCoordinate + "," + yCoordinate + ").");
 	}
 
 	public Box getBox() {
@@ -105,6 +110,7 @@ public class BoxPanel extends JPanel {
 	}
 
 	public void setBox(Box box) {
+		Logger.log(Logger.TRACE, "Setting new Box (" + xCoordinate + "," + yCoordinate + ").");
 		if(box instanceof StaticBox) {
 			updateType(TYPE_BOX);
 		} else if (box instanceof WordBox) {
@@ -123,17 +129,20 @@ public class BoxPanel extends JPanel {
 	 *            New type of the box.
 	 */
 	private void updateType(int newType) {
+		Logger.log(Logger.TRACE, "Updating box type (" + xCoordinate + "," + yCoordinate + ").");
 		type = newType;
 
 		// Update box to new type
 		switch (newType) {
 		case TYPE_BOX:
+			Logger.log(Logger.DEBUG, "Updating box type to STATICBOX (" + xCoordinate + "," + yCoordinate + ").");
 			this.setBackground(Color.gray);
 			this.textPane.setVisible(false);
 			this.directionLabel.setVisible(false);
 			break;
 
 		case TYPE_WORDBOX_UP:
+			Logger.log(Logger.DEBUG, "Updating box type to WORDBOX, UP (" + xCoordinate + "," + yCoordinate + ").");
 			this.setBackground(Color.lightGray);
 			this.textPane.setBackground(Color.lightGray);
 			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));			
@@ -143,6 +152,7 @@ public class BoxPanel extends JPanel {
 			break;
 			
 		case TYPE_WORDBOX_LEFT:
+			Logger.log(Logger.DEBUG, "Updating box type to WORDBOX, LEFT (" + xCoordinate + "," + yCoordinate + ").");
 			this.setBackground(Color.lightGray);
 			this.textPane.setBackground(Color.lightGray);
 			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));			
@@ -151,7 +161,8 @@ public class BoxPanel extends JPanel {
 			this.directionLabel.setText("<");
 			break;
 			
-		case TYPE_WORDBOX_DOWN:			
+		case TYPE_WORDBOX_DOWN:	
+			Logger.log(Logger.DEBUG, "Updating box type to WORDBOX, DOWN (" + xCoordinate + "," + yCoordinate + ").");
 			this.setBackground(Color.lightGray);
 			this.textPane.setBackground(Color.lightGray);
 			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));			
@@ -161,6 +172,7 @@ public class BoxPanel extends JPanel {
 			break;
 
 		case TYPE_WORDBOX_RIGHT:
+			Logger.log(Logger.DEBUG, "Updating box type to WORDBOX, RIGHT (" + xCoordinate + "," + yCoordinate + ").");
 			this.setBackground(Color.lightGray);
 			this.textPane.setBackground(Color.lightGray);
 			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));			
@@ -170,6 +182,7 @@ public class BoxPanel extends JPanel {
 			break;
 			
 		case TYPE_LETTERBOX:
+			Logger.log(Logger.DEBUG, "Updating box type to LETTERBOX (" + xCoordinate + "," + yCoordinate + ").");
 			this.setBackground(Color.white);
 			this.textPane.setBackground(Color.white);
 			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 40));
@@ -193,12 +206,17 @@ public class BoxPanel extends JPanel {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			Logger.log(Logger.TRACE, "Button clicked (" + xCoordinate + "," + yCoordinate + ").");
 			// If other button than right button is pressed or if we're clicking
 			// on a non-editable field, do nothing.
 			if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != InputEvent.BUTTON3_MASK
 					|| type == TYPE_BOX)
 				return;
 
+			Logger.log(Logger.TRACE, "Right button clicked (" + xCoordinate + "," + yCoordinate + ").");
+			
+			Logger.log(Logger.TRACE, "Showing dialog (" + xCoordinate + "," + yCoordinate + ").");
+			
 			String message = "";
 
 			// Determine message
@@ -217,6 +235,8 @@ public class BoxPanel extends JPanel {
 			if (type == TYPE_LETTERBOX && result.length() > 0)
 				result = String.valueOf(result.charAt(0)).toUpperCase();
 
+			Logger.log(Logger.DEBUG, "Result from dialog: " + result + " (" + xCoordinate + "," + yCoordinate + ").");
+			
 			// Update textpane
 			boxPanel.textPane.setText(result);
 		}
@@ -231,10 +251,15 @@ public class BoxPanel extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
+			Logger.log(Logger.TRACE, "Button pressed (" + xCoordinate + "," + yCoordinate + ").");
 			// If other button than left button is pressed, do nothing.
 			if ((e.getModifiers() & InputEvent.BUTTON1_MASK) != InputEvent.BUTTON1_MASK)
 				return;
-
+			
+			Logger.log(Logger.TRACE, "Left button pressed (" + xCoordinate + "," + yCoordinate + ").");
+			
+			Logger.log(Logger.TRACE, "Cycling box type (" + xCoordinate + "," + yCoordinate + ").");
+			
 			// Cycle types
 			switch (boxPanel.type) {
 			case TYPE_BOX:

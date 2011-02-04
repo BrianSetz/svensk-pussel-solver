@@ -12,6 +12,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import nl.svenskpusselsolver.dataobjects.Box;
+import nl.svenskpusselsolver.logging.Logger;
 import nl.svenskpusselsolver.solver.BruteForceSolver;
 
 /**
@@ -26,8 +27,12 @@ public class PuzzleFrame extends JFrame {
 	 * Puzzle frame contains all the boxes.
 	 */
 	public PuzzleFrame() {
+		Logger.log(Logger.TRACE, "Building PuzzleFrame.");
+		
 		contentPane = this.getContentPane();
 
+		
+		Logger.log(Logger.TRACE, "Building menu.");
 		this.initializePuzzle(10, 10);
 
 		// Build MenuBar
@@ -66,10 +71,13 @@ public class PuzzleFrame extends JFrame {
 		});
 		file.add(exitItem);	
 		
+		Logger.log(Logger.TRACE, "Initializing frame.");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Svensk Pussel Solver");
 		this.pack();
 		this.setVisible(true);
+		
+		Logger.log(Logger.INFO, "PuzzleFrame built.");
 	}
 
 	public PuzzleFrame(Box[][] grid) {	
@@ -77,6 +85,7 @@ public class PuzzleFrame extends JFrame {
 		
 		this.grid = grid;
 		
+		Logger.log(Logger.TRACE, "Initializing grid with content.");
 		for (int y = 0; y < grid[0].length; y++) {
 			for (int x = 0; x < grid.length; x++) {
 				boxPanelGrid[x][y].setBox(grid[x][y]);
@@ -96,6 +105,7 @@ public class PuzzleFrame extends JFrame {
 		contentPane.setBackground(Color.black);
 		contentPane.setLayout(new GridLayout(y, x, 1, 1));
 
+		Logger.log(Logger.TRACE, "Creating boxes for grid.");
 		// Create all boxes
 		for (int i = 0; i < y; i++) {
 			for (int j = 0; j < x; j++) {
