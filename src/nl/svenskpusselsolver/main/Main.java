@@ -20,7 +20,7 @@ public class Main {
 		grid[4][0] = new StaticBox(4, 0);
 		grid[5][0] = new WordBox(5, 0, "Ceylonse Munt", WordBox.DIRECTION_DOWN);
 		grid[6][0] = new StaticBox(6, 0);
-		grid[7][0] = new WordBox(7, 0, "Bal papier", WordBox.DIRECTION_DOWN);
+		grid[7][0] = new WordBox(7, 0, "Papierbal", WordBox.DIRECTION_DOWN);
 		grid[8][0] = new WordBox(8, 0, "Water in Friesland", WordBox.DIRECTION_DOWN);
 		grid[9][0] = new WordBox(9, 0, "Draaikolk", WordBox.DIRECTION_DOWN);
 
