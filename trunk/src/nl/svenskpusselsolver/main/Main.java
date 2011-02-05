@@ -14,17 +14,17 @@ public class Main {
 		Box[][] grid = new Box[10][10];
 
 		grid[0][0] = new StaticBox(0, 0);
-		grid[1][0] = new WordBox(1, 0, "Zuivelproduct", WordBox.DIRECTION_DOWN);
+		grid[1][0] = new WordBox(1, 0, "Zwaardvis", WordBox.DIRECTION_DOWN);
 		grid[2][0] = new StaticBox(2, 0);
-		grid[3][0] = new WordBox(3, 0, "Sportief kledingsmerk", WordBox.DIRECTION_DOWN);
+		grid[3][0] = new WordBox(3, 0, "Deel van het hoofd", WordBox.DIRECTION_DOWN);
 		grid[4][0] = new StaticBox(4, 0);
-		grid[5][0] = new WordBox(5, 0, "Eens", WordBox.DIRECTION_DOWN);
+		grid[5][0] = new WordBox(5, 0, "Ceylonse Munt", WordBox.DIRECTION_DOWN);
 		grid[6][0] = new StaticBox(6, 0);
-		grid[7][0] = new WordBox(7, 0, "Wedstrijd", WordBox.DIRECTION_DOWN);
-		grid[8][0] = new WordBox(8, 0, "Onder andere", WordBox.DIRECTION_DOWN);
-		grid[9][0] = new WordBox(9, 0, "Vuur", WordBox.DIRECTION_DOWN);
+		grid[7][0] = new WordBox(7, 0, "Bal papier", WordBox.DIRECTION_DOWN);
+		grid[8][0] = new WordBox(8, 0, "Water in Friesland", WordBox.DIRECTION_DOWN);
+		grid[9][0] = new WordBox(9, 0, "Draaikolk", WordBox.DIRECTION_DOWN);
 
-		grid[0][1] = new WordBox(0, 1, "Buideldier", WordBox.DIRECTION_RIGHT);		
+		grid[0][1] = new WordBox(0, 1, "Beter worden", WordBox.DIRECTION_RIGHT);		
 		grid[1][1] = new LetterBox(1, 1);
 		grid[2][1] = new LetterBox(2, 1);
 		grid[3][1] = new LetterBox(3, 1);
@@ -37,27 +37,27 @@ public class Main {
 
 		grid[0][2] = new StaticBox(0, 2);		
 		grid[1][2] = new LetterBox(1, 2);
-		grid[2][2] = new WordBox(2, 2, "Wapen van een insect", WordBox.DIRECTION_DOWN);
+		grid[2][2] = new WordBox(2, 2, "Egaal", WordBox.DIRECTION_DOWN);
 		grid[3][2] = new LetterBox(3, 2);
 		grid[4][2] = new StaticBox(4, 2);
 		grid[5][2] = new LetterBox(5, 2);
-		grid[6][2] = new WordBox(6, 2, "Paling", WordBox.DIRECTION_RIGHT);
+		grid[6][2] = new WordBox(6, 2, "Dier", WordBox.DIRECTION_RIGHT);
 		grid[7][2] = new LetterBox(7, 2);
 		grid[8][2] = new LetterBox(8, 2);
 		grid[9][2] = new LetterBox(9, 2);
 		
-		grid[0][3] = new WordBox(0, 3, "Vaartuig", WordBox.DIRECTION_RIGHT);		
+		grid[0][3] = new WordBox(0, 3, "Papegaai", WordBox.DIRECTION_RIGHT);		
 		grid[1][3] = new LetterBox(1, 3);
 		grid[2][3] = new LetterBox(2, 3);
 		grid[3][3] = new LetterBox(3, 3);
-		grid[4][3] = new WordBox(4, 3, "Vernis", WordBox.DIRECTION_DOWN);
+		grid[4][3] = new WordBox(4, 3, "Gevangenis", WordBox.DIRECTION_DOWN);
 		grid[5][3] = new LetterBox(5, 3);
-		grid[6][3] = new WordBox(6, 3, "Elegant dier", WordBox.DIRECTION_DOWN);
+		grid[6][3] = new WordBox(6, 3, "Speelgoed", WordBox.DIRECTION_DOWN);
 		grid[7][3] = new LetterBox(7, 3);
-		grid[8][3] = new WordBox(8, 3,  "Sneeuwhut", WordBox.DIRECTION_DOWN);
+		grid[8][3] = new WordBox(8, 3,  "Wildzwijn", WordBox.DIRECTION_DOWN);
 		grid[9][3] = new LetterBox(9, 3);
 		
-		grid[0][4] = new WordBox(0, 4, "Vervoermiddel", WordBox.DIRECTION_RIGHT);		
+		grid[0][4] = new WordBox(0, 4, "Tegenvaller", WordBox.DIRECTION_RIGHT);		
 		grid[1][4] = new LetterBox(1, 4);
 		grid[2][4] = new LetterBox(2, 4);
 		grid[3][4] = new LetterBox(3, 4);
@@ -69,17 +69,17 @@ public class Main {
 		grid[9][4] = new LetterBox(9, 4);
 
 		grid[0][5] = new StaticBox(0, 5);		
-		grid[1][5] = new WordBox(1, 5, "Nevel", WordBox.DIRECTION_DOWN);
+		grid[1][5] = new WordBox(1, 5, "Alcoholische drank", WordBox.DIRECTION_DOWN);
 		grid[2][5] = new LetterBox(2, 5);
-		grid[3][5] = new WordBox(3, 5, "Ontkenning", WordBox.DIRECTION_DOWN);
+		grid[3][5] = new WordBox(3, 5, "Destijds", WordBox.DIRECTION_DOWN);
 		grid[4][5] = new LetterBox(4, 5);
-		grid[5][5] = new WordBox(5, 5, "Bolster", WordBox.DIRECTION_DOWN);
+		grid[5][5] = new WordBox(5, 5, "Bloedvat", WordBox.DIRECTION_DOWN);
 		grid[6][5] = new LetterBox(6, 5);
-		grid[7][5] = new WordBox(7, 5, "Rivier in Duitsland", WordBox.DIRECTION_DOWN);
+		grid[7][5] = new WordBox(7, 5, "Borg", WordBox.DIRECTION_DOWN);
 		grid[8][5] = new LetterBox(8, 5);
-		grid[9][5] = new WordBox(9, 5, "Bestemming", WordBox.DIRECTION_DOWN);
+		grid[9][5] = new WordBox(9, 5, "Ontkenning", WordBox.DIRECTION_DOWN);
 		
-		grid[0][6] = new WordBox(0, 6, "Gedachte", WordBox.DIRECTION_RIGHT);		
+		grid[0][6] = new WordBox(0, 6, "Verrassen", WordBox.DIRECTION_RIGHT);		
 		grid[1][6] = new LetterBox(1, 6);
 		grid[2][6] = new LetterBox(2, 6);
 		grid[3][6] = new LetterBox(3, 6);
@@ -90,13 +90,13 @@ public class Main {
 		grid[8][6] = new LetterBox(8, 6);
 		grid[9][6] = new LetterBox(9, 6);
 		
-		grid[0][7] = new WordBox(0, 7, "Bier", WordBox.DIRECTION_RIGHT);		
+		grid[0][7] = new WordBox(0, 7, "Mythologische Figuur", WordBox.DIRECTION_RIGHT);		
 		grid[1][7] = new LetterBox(1, 7);
 		grid[2][7] = new LetterBox(2, 7);
 		grid[3][7] = new LetterBox(3, 7);
 		grid[4][7] = new StaticBox(4, 7);
 		grid[5][7] = new LetterBox(5, 7);
-		grid[6][7] = new WordBox(6,7, "Bos", WordBox.DIRECTION_RIGHT);
+		grid[6][7] = new WordBox(6,7, "Vlaktemaat", WordBox.DIRECTION_RIGHT);
 		grid[7][7] = new LetterBox(7, 7);
 		grid[8][7] = new LetterBox(8, 7);
 		grid[9][7] = new LetterBox(9, 7);
@@ -112,7 +112,7 @@ public class Main {
 		grid[8][8] = new StaticBox(8, 8);
 		grid[9][8] = new LetterBox(9, 8);
 		
-		grid[0][9] = new WordBox(0, 9, "Stipt", WordBox.DIRECTION_RIGHT);		
+		grid[0][9] = new WordBox(0, 9, "Toeren", WordBox.DIRECTION_RIGHT);		
 		grid[1][9] = new LetterBox(1, 9);
 		grid[2][9] = new LetterBox(2, 9);
 		grid[3][9] = new LetterBox(3, 9);

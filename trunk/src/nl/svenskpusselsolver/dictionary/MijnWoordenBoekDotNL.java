@@ -31,6 +31,7 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 		try {
 			page = new URLReader().readURL(getConnectionURL(word, length));
 		} catch (IOException e) {
+			Logger.log(Logger.ERROR, "Downloading answers for " + word + " failed: " + e.getMessage() + ".");
 			e.printStackTrace();
 		}
 		
@@ -46,7 +47,12 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 			Matcher matcher2 = wordPattern.matcher(matcher.group(3));
 
 			while (matcher2.find()) {
-				answers.add(matcher2.group(2));
+				String answer = matcher2.group(2).toUpperCase();
+				
+				// Replace IJ with Y
+				String replacedAnswer = answer.replace("IJ", "Y");
+				
+				answers.add(replacedAnswer);
 			}
 		}
 		
