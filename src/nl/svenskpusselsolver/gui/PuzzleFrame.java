@@ -12,6 +12,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import nl.svenskpusselsolver.dataobjects.Box;
+import nl.svenskpusselsolver.dataobjects.LetterBox;
 import nl.svenskpusselsolver.logging.Logger;
 import nl.svenskpusselsolver.solver.BruteForceSolver;
 
@@ -21,7 +22,7 @@ import nl.svenskpusselsolver.solver.BruteForceSolver;
 public class PuzzleFrame extends JFrame {
 	private Container contentPane;
 	private BoxPanel[][] boxPanelGrid;
-	private Box[][] grid;
+	//private Box[][] grid;
 	
 	/**
 	 * Puzzle frame contains all the boxes.
@@ -50,16 +51,27 @@ public class PuzzleFrame extends JFrame {
 		solveItem.addActionListener(new ActionListener() {		
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-			Box[][] newGrid = new BruteForceSolver().solvePuzzle(grid);
-			for (int y = 0; y < newGrid[0].length; y++) {
-				for (int x = 0; x < newGrid.length; x++) {
-					boxPanelGrid[x][y].setBox(newGrid[x][y]);
+				Box[][] currentGrid = new Box[boxPanelGrid.length][boxPanelGrid[0].length];
+				
+				for (int x = 0; x < boxPanelGrid.length; x++) {
+					for (int y = 0; y < boxPanelGrid[0].length; y++) {			
+						currentGrid[x][y] = boxPanelGrid[x][y].getBox();
+					}
 				}
+				
+				Box[][] newGrid = new BruteForceSolver().solvePuzzle(currentGrid);
+				for (int y = 0; y < newGrid[0].length; y++) {
+					for (int x = 0; x < newGrid.length; x++) {
+						boxPanelGrid[x][y].setBox(newGrid[x][y]);
+					}
+				}	
 			}	
-		}	
 		});
 		file.add(solveItem);
 
+		// Add separator
+		file.addSeparator();
+		
 		// Add Exit item
 		JMenuItem exitItem = new JMenuItem("Exit");
 		exitItem.setMnemonic('x');
@@ -83,11 +95,11 @@ public class PuzzleFrame extends JFrame {
 	public PuzzleFrame(Box[][] grid) {	
 		this();
 		
-		this.grid = grid;
+		//this.grid = grid;
 		
 		Logger.log(Logger.TRACE, "Initializing grid with content.");
-		for (int y = 0; y < grid[0].length; y++) {
-			for (int x = 0; x < grid.length; x++) {
+		for (int x = 0; x < grid.length; x++) {
+			for (int y = 0; y < grid[0].length; y++) {
 				boxPanelGrid[x][y].setBox(grid[x][y]);
 			}
 		}		
@@ -103,15 +115,15 @@ public class PuzzleFrame extends JFrame {
 	private void initializePuzzle(int x, int y) {
 		boxPanelGrid = new BoxPanel[x][y];		
 		contentPane.setBackground(Color.black);
-		contentPane.setLayout(new GridLayout(y, x, 1, 1));
+		contentPane.setLayout(new GridLayout(x, y, 1, 1));
 
 		Logger.log(Logger.TRACE, "Creating boxes for grid.");
 		// Create all boxes
-		for (int i = 0; i < y; i++) {
-			for (int j = 0; j < x; j++) {
-				BoxPanel bp = new BoxPanel(j, i);
+		for (int i = 0; i < x; i++) {
+			for (int j = 0; j < y; j++) {
+				BoxPanel bp = new BoxPanel(new LetterBox(i, j));
 				contentPane.add(bp); // New box
-				boxPanelGrid[j][i] = bp; // Store reference in grid
+				boxPanelGrid[j][i] = bp; // Store reference in grid, flip x and y for Gridbag layout 
 			}
 		}
 	}
