@@ -25,7 +25,6 @@ public class BruteForceSolver implements Solver {
 		this.grid = grid;		
 		this.possibleAnswersGrid = new List[grid.length][grid[0].length];
 		
-		
 		// Download all answers available for words.
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {			
@@ -53,11 +52,13 @@ public class BruteForceSolver implements Solver {
 						List<String> possibleAnswers = possibleAnswersGrid[x][y];
 						Logger.log(Logger.TRACE, "Checking answers for " + wordBox.getWord() + ".");
 						
+						// No answers in list
 						if(possibleAnswers.size() <= 0) {
 							Logger.log(Logger.TRACE, "Skipping " + wordBox.getWord() + ", already answered or no answers available.");
 							continue;
 						}
 						
+						// Count possible answers
 						int answerCount = 0;
 						for (Iterator<String> iter = possibleAnswers.iterator(); iter.hasNext();) {
 							String answer = iter.next();
@@ -70,6 +71,7 @@ public class BruteForceSolver implements Solver {
 							}
 						}
 						
+						// If there is one possible answer, use it
 						if(answerCount == 1) {
 							Logger.log(Logger.DEBUG, "Found a word with a single answer, for " + wordBox.getWord() + ": " + possibleAnswers.get(0) +  ".");
 							changesInGrid = true;
@@ -81,169 +83,137 @@ public class BruteForceSolver implements Solver {
 			}
 		}
 		
-		//TODO: Brute force remaining answers.
-		
-		
+		Box[][] tmpGrid = grid.clone();
+		List<String>[][] tmpPossibleAnswersGrid = possibleAnswersGrid.clone();
+				
 		return grid;		
+	}
+
+	private void bruteForceAnswer() {
+		for (int x = 0; x < grid.length; x++) {
+			for (int y = 0; y < grid[0].length; y++) {			
+			}
+		}	
 	}
 
 	private boolean isPossibleAnswer(WordBox wordBox, String word) {
 		Logger.log(Logger.DEBUG, "Checking if " + word + " is a possible answer for: " + wordBox.getWord() + ".");
-		
-		int x = wordBox.getXCoordinate();
-		int y = wordBox.getYCoordinate();
-		
-		int length = 0;		
-		boolean couldFit = true;
-		if(wordBox.getDirection() == WordBox.DIRECTION_UP) {
-			y--;
-			while(grid[x][y] instanceof LetterBox) {
-				if(((LetterBox)grid[x][y]).getLetter() != '\u0000' && ((LetterBox)grid[x][y]).getLetter() != ' ')
-					if(((LetterBox)grid[x][y]).getLetter() != word.charAt(length))
-						return false;
 
-				length++;
-				y--;							
-				if(y < 0)
-					break;
-			}
-		} else if(wordBox.getDirection() == WordBox.DIRECTION_RIGHT) {
-			x++;
-			while(grid[x][y] instanceof LetterBox) {
-				if(((LetterBox)grid[x][y]).getLetter() != '\u0000' && ((LetterBox)grid[x][y]).getLetter() != ' ')
-					if(((LetterBox)grid[x][y]).getLetter() != word.charAt(length))
-						return false;
-				
-				length++;
-				x++;				
-				if(x > grid.length - 1)
-					break;
-			}
-		} else if(wordBox.getDirection() == WordBox.DIRECTION_DOWN) {
-			y++;
-			while(grid[x][y] instanceof LetterBox) {
-				if(((LetterBox)grid[x][y]).getLetter() != '\u0000' && ((LetterBox)grid[x][y]).getLetter() != ' ')
-					if(((LetterBox)grid[x][y]).getLetter() != word.charAt(length))
-						return false;
-				
-				length++;
-				y++;
-				if(y > grid.length - 1)
-					break;
-			}
-		} else if(wordBox.getDirection() == WordBox.DIRECTION_LEFT) {
-			x--;
-			while(grid[x][y] instanceof LetterBox) {
-				if(((LetterBox)grid[x][y]).getLetter() != '\u0000' && ((LetterBox)grid[x][y]).getLetter() != ' ')
-					if(((LetterBox)grid[x][y]).getLetter() != word.charAt(length))
-						return false;
-				
-				length++;
-				x--;								
-				if(x < 0)
-					break;
-			}
+		// Move coordinates
+		int movedCoordinates[] = moveXY(wordBox.getXCoordinate(), wordBox.getYCoordinate(), wordBox.getDirection());	
+		int x = movedCoordinates[0];
+		int y = movedCoordinates[1];
+		
+		int position = 0;		
+		boolean couldFit = true;
+
+		// Check if word is possible answer
+		while(grid[x][y] instanceof LetterBox) {
+			if(((LetterBox)grid[x][y]).getLetter() != '\u0000' && ((LetterBox)grid[x][y]).getLetter() != ' ')
+				if(((LetterBox)grid[x][y]).getLetter() != word.charAt(position))
+					return false;
+
+			position++;
+			
+			// Move coordinates
+			int coordinates[] = moveXY(x, y, wordBox.getDirection());	
+			x = coordinates[0];
+			y = coordinates[1];
+			
+			// Check for out of bounds
+			if(isOutOfBounds(x, y))
+				break;			
 		}
 		
 		return couldFit;
 	}
-	
+
 	private int getWordLength(WordBox wordBox) {
 		Logger.log(Logger.DEBUG, "Calculating length for " + wordBox.getWord() + ".");
 		
-		int x = wordBox.getXCoordinate();
-		int y = wordBox.getYCoordinate();
+		// Move coordinates
+		int movedCoordinates[] = moveXY(wordBox.getXCoordinate(), wordBox.getYCoordinate(), wordBox.getDirection());	
+		int x = movedCoordinates[0];
+		int y = movedCoordinates[1];
 		
 		int length = 0;
-		
-		if(wordBox.getDirection() == WordBox.DIRECTION_UP) {
-			y--;
-			while(grid[x][y] instanceof LetterBox) {
-				length++;
-				y--;
-				
-				if(y < 0)
-					break;
-			}
-		} else if(wordBox.getDirection() == WordBox.DIRECTION_RIGHT) {
-			x++;
-			while(grid[x][y] instanceof LetterBox) {
-				length++;
-				x++;
-				
-				if(x > grid.length - 1)
-					break;
-			}
-		} else if(wordBox.getDirection() == WordBox.DIRECTION_DOWN) {
-			y++;
-			while(grid[x][y] instanceof LetterBox) {
-				length++;
-				y++;
-				
-				if(y > grid.length - 1)
-					break;
-			}
-		} else if(wordBox.getDirection() == WordBox.DIRECTION_LEFT) {
-			x--;
-			while(grid[x][y] instanceof LetterBox) {
-				length++;
-				x--;
-				
-				if(x < 0)
-					break;
-			}
+
+		// Check if word is possible answer
+		while(grid[x][y] instanceof LetterBox) {
+			length++;
+			
+			// Move coordinates
+			int coordinates[] = moveXY(x, y, wordBox.getDirection());	
+			x = coordinates[0];
+			y = coordinates[1];
+			
+			// Check for out of bounds
+			if(isOutOfBounds(x, y))
+				break;			
 		}
-		
+
 		Logger.log(Logger.TRACE, "Found length " + length + " for " + wordBox.getWord() + ".");
 		return length;		
 	}
 	
 	private void setWord(WordBox wordBox, String word) {
-		int x = wordBox.getXCoordinate();
-		int y = wordBox.getYCoordinate();
+		Logger.log(Logger.DEBUG, "Setting word " + word + " for: " + wordBox.getWord() + ".");
 		
-		int length = 0;
+		// Move coordinates
+		int movedCoordinates[] = moveXY(wordBox.getXCoordinate(), wordBox.getYCoordinate(), wordBox.getDirection());	
+		int x = movedCoordinates[0];
+		int y = movedCoordinates[1];
 		
-		if(wordBox.getDirection() == WordBox.DIRECTION_UP) {
-			y--;
-			while(grid[x][y] instanceof LetterBox) {
-				((LetterBox)grid[x][y]).setLetter(word.charAt(length));
-				length++;
-				y--;
-				
-				if(y < 0)
-					break;
-			}
-		} else if(wordBox.getDirection() == WordBox.DIRECTION_RIGHT) {
-			x++;
-			while(grid[x][y] instanceof LetterBox) {
-				((LetterBox)grid[x][y]).setLetter(word.charAt(length));
-				length++;
-				x++;	
-				
-				if(x > grid.length - 1)
-					break;
-			}
-		} else if(wordBox.getDirection() == WordBox.DIRECTION_DOWN) {
-			y++;
-			while(grid[x][y] instanceof LetterBox) {
-				((LetterBox)grid[x][y]).setLetter(word.charAt(length));
-				length++;
-				y++;
-				
-				if(y > grid.length - 1)
-					break;
-			}
-		} else if(wordBox.getDirection() == WordBox.DIRECTION_LEFT) {
-			x--;
-			while(grid[x][y] instanceof LetterBox) {
-				((LetterBox)grid[x][y]).setLetter(word.charAt(length));
-				length++;
-				x--;	
-				
-				if(x < 0)
-					break;
-			}
+		int position = 0;		
+
+		// Check if word is possible answer
+		while(grid[x][y] instanceof LetterBox) {
+			((LetterBox)grid[x][y]).setLetter(word.charAt(position));
+
+			position++;
+			
+			// Move coordinates
+			int coordinates[] = moveXY(x, y, wordBox.getDirection());	
+			x = coordinates[0];
+			y = coordinates[1];
+			
+			// Check for out of bounds
+			if(isOutOfBounds(x, y))
+				break;			
 		}
+		
+		Logger.log(Logger.TRACE, "Set word " + word + " for: " + wordBox.getWord() + ".");
 	}
+	
+	private int[] moveXY(int x, int y, int direction) {
+		switch(direction) {
+		case WordBox.DIRECTION_UP:
+			y--;
+			break;
+		case WordBox.DIRECTION_RIGHT:
+			x++;
+			break;
+		case WordBox.DIRECTION_DOWN:
+			y++;
+			break;
+		case WordBox.DIRECTION_LEFT:
+			y--;
+			break;
+		}
+		
+		return new int[] { x, y };
+	}
+	
+	private boolean isOutOfBounds(int x, int y) {
+		if(y < 0)
+			return true;
+		if(x > grid.length - 1)
+			return true;
+		if(y > grid.length - 1)
+			return true;
+		if(x < 0)
+			return true;
+		
+		return false;		
+	}	
 }
