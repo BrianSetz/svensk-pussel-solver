@@ -52,7 +52,9 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 				// Replace IJ with Y
 				String replacedAnswer = answer.replace("IJ", "Y");
 				
-				answers.add(replacedAnswer);
+				// Check if length is still the length we're looking for
+				if(replacedAnswer.length() == length)
+					answers.add(replacedAnswer);
 			}
 		}
 		
