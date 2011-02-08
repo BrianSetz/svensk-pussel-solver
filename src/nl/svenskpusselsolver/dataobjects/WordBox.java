@@ -1,19 +1,17 @@
 package nl.svenskpusselsolver.dataobjects;
 
 public class WordBox extends Box {
-	public static final int DIRECTION_UP = 0;	
-	public static final int DIRECTION_RIGHT = 1;
-	public static final int DIRECTION_DOWN = 2;
-	public static final int DIRECTION_LEFT = 3;
+	
+	public enum Direction { UP, RIGHT, DOWN, LEFT }
 	
 	private String word;
-	private int direction;
+	private Direction direction;
 	
 	public WordBox(int xCoordinate, int yCoordinate) {
 		super(xCoordinate, yCoordinate);
 	}
 	
-	public WordBox(int xCoordinate, int yCoordinate, String word, int direction) {		
+	public WordBox(int xCoordinate, int yCoordinate, String word, Direction direction) {		
 		this(xCoordinate, yCoordinate);
 		
 		this.word = word;
@@ -28,11 +26,11 @@ public class WordBox extends Box {
 		return word;
 	}
 
-	public void setDirection(int direction) {
+	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
 
-	public int getDirection() {
+	public Direction getDirection() {
 		return direction;
 	}	
 }
