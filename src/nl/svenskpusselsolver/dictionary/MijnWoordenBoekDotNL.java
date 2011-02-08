@@ -35,7 +35,6 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 			e.printStackTrace();
 		}
 		
-		//Get the rows 
 		Pattern pagePattern = Pattern.compile("(background-color:#ddd>(<big){0})(((<font)|[^<]).*?)</td>");
 		Pattern wordPattern = Pattern.compile("(\\s|>|^)([^ -<>]+?)(\\s|<|$)");
 		
@@ -53,7 +52,7 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 				String replacedAnswer = answer.replace("IJ", "Y");
 				
 				// Check if length is still the length we're looking for
-				if(replacedAnswer.length() == length)
+				if(length == -1 || replacedAnswer.length() == length)
 					answers.add(replacedAnswer);
 			}
 		}
