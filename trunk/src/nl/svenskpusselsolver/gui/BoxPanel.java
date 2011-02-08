@@ -113,16 +113,16 @@ public class BoxPanel extends JPanel {
 			
 			WordBox wordBox = (WordBox) box;
 			
-			if(wordBox.getDirection() == WordBox.DIRECTION_UP) {
+			if(wordBox.getDirection() == WordBox.Direction.UP) {
 				Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, UP (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 				this.directionLabel.setText("^");
-			} else if(wordBox.getDirection() == WordBox.DIRECTION_RIGHT) {
+			} else if(wordBox.getDirection() == WordBox.Direction.RIGHT) {
 				Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, RIGHT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 				this.directionLabel.setText(">");
-			} else if(wordBox.getDirection() == WordBox.DIRECTION_DOWN) {
+			} else if(wordBox.getDirection() == WordBox.Direction.DOWN) {
 				Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, DOWN (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 				this.directionLabel.setText("v");
-			} else if(wordBox.getDirection() == WordBox.DIRECTION_LEFT) {
+			} else if(wordBox.getDirection() == WordBox.Direction.LEFT) {
 				Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, LEFT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 				this.directionLabel.setText("<");
 			}

@@ -91,18 +91,18 @@ public class BoxPanelMouseListener implements MouseListener {
 		
 		// Cycle box type and update box to new type
 		if(box instanceof StaticBox) {
-			boxPanel.updateType(new WordBox(box.getXCoordinate(), box.getYCoordinate(), "", WordBox.DIRECTION_UP));
+			boxPanel.updateType(new WordBox(box.getXCoordinate(), box.getYCoordinate(), "", WordBox.Direction.UP));
 		} else if(box instanceof WordBox) {
 			WordBox wordBox = (WordBox) box;
 			
 			// Determine direction
-			if(wordBox.getDirection() == WordBox.DIRECTION_UP) {
-				boxPanel.updateType(new WordBox(box.getXCoordinate(), box.getYCoordinate(), "", WordBox.DIRECTION_RIGHT));
-			} else if(wordBox.getDirection() == WordBox.DIRECTION_RIGHT) {
-				boxPanel.updateType(new WordBox(box.getXCoordinate(), box.getYCoordinate(), "", WordBox.DIRECTION_DOWN));
-			} else if(wordBox.getDirection() == WordBox.DIRECTION_DOWN) {
-				boxPanel.updateType(new WordBox(box.getXCoordinate(), box.getYCoordinate(), "", WordBox.DIRECTION_LEFT));
-			} else if(wordBox.getDirection() == WordBox.DIRECTION_LEFT) {
+			if(wordBox.getDirection() == WordBox.Direction.UP) {
+				boxPanel.updateType(new WordBox(box.getXCoordinate(), box.getYCoordinate(), "", WordBox.Direction.RIGHT));
+			} else if(wordBox.getDirection() == WordBox.Direction.RIGHT) {
+				boxPanel.updateType(new WordBox(box.getXCoordinate(), box.getYCoordinate(), "", WordBox.Direction.DOWN));
+			} else if(wordBox.getDirection() == WordBox.Direction.DOWN) {
+				boxPanel.updateType(new WordBox(box.getXCoordinate(), box.getYCoordinate(), "", WordBox.Direction.LEFT));
+			} else if(wordBox.getDirection() == WordBox.Direction.LEFT) {
 				boxPanel.updateType(new LetterBox(box.getXCoordinate(), box.getYCoordinate()));
 			}
 		} else if(box instanceof LetterBox) {
