@@ -9,7 +9,7 @@ import nl.svenskpusselsolver.logging.Logger;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		Logger.log(Logger.TRACE, "Initializing demo puzzle.");
+		Logger.log(Logger.LogLevel.TRACE, "Initializing demo puzzle.");
 		
 		Box[][] grid = new Box[10][10];
 

@@ -18,7 +18,7 @@ public class URLReader {
 	 * @throws IOException
 	 */
 	public String readURL(String urlString) throws IOException {
-		Logger.log(Logger.DEBUG, "Connecting to " + urlString + ".");
+		Logger.log(Logger.LogLevel.DEBUG, "Connecting to " + urlString + ".");
 		
 		// Connect to URL
 		URL url = new URL(urlString);
@@ -34,7 +34,7 @@ public class URLReader {
 
 		in.close();
 
-		Logger.log(Logger.TRACE, "Got response from " + urlString + ".");
+		Logger.log(Logger.LogLevel.TRACE, "Got response from " + urlString + ".");
 		
 		return result.toString();
 	}

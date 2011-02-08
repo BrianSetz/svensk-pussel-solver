@@ -33,7 +33,7 @@ public class BoxPanel extends JPanel {
 	public BoxPanel(Box box) {
 		super();
 		
-		Logger.log(Logger.TRACE, "Building BoxPanel (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		Logger.log(Logger.LogLevel.TRACE, "Building BoxPanel (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 
 		// Initialize box
 		BoxPanelMouseListener bpml = new BoxPanelMouseListener(this);
@@ -62,7 +62,7 @@ public class BoxPanel extends JPanel {
 														// manager happy
 		this.updateType(box); // Update
 		
-		Logger.log(Logger.INFO, "BoxPanel built (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		Logger.log(Logger.LogLevel.INFO, "BoxPanel built (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 	}
 
 	/**
@@ -95,12 +95,12 @@ public class BoxPanel extends JPanel {
 	 *            New box.
 	 */
 	public void updateType(Box box) {
-		Logger.log(Logger.TRACE, "Updating box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		Logger.log(Logger.LogLevel.TRACE, "Updating box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 		//type = newType;
 
 		// Update box to new type
 		if(box instanceof StaticBox) {
-			Logger.log(Logger.DEBUG, "Updating box type to STATICBOX (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+			Logger.log(Logger.LogLevel.DEBUG, "Updating box type to STATICBOX (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 			this.setBackground(Color.gray);
 			this.textPane.setVisible(false);
 			this.directionLabel.setVisible(false);
@@ -114,20 +114,20 @@ public class BoxPanel extends JPanel {
 			WordBox wordBox = (WordBox) box;
 			
 			if(wordBox.getDirection() == WordBox.DIRECTION_UP) {
-				Logger.log(Logger.DEBUG, "Updating box type to WORDBOX, UP (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+				Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, UP (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 				this.directionLabel.setText("^");
 			} else if(wordBox.getDirection() == WordBox.DIRECTION_RIGHT) {
-				Logger.log(Logger.DEBUG, "Updating box type to WORDBOX, RIGHT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+				Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, RIGHT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 				this.directionLabel.setText(">");
 			} else if(wordBox.getDirection() == WordBox.DIRECTION_DOWN) {
-				Logger.log(Logger.DEBUG, "Updating box type to WORDBOX, DOWN (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+				Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, DOWN (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 				this.directionLabel.setText("v");
 			} else if(wordBox.getDirection() == WordBox.DIRECTION_LEFT) {
-				Logger.log(Logger.DEBUG, "Updating box type to WORDBOX, LEFT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+				Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, LEFT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 				this.directionLabel.setText("<");
 			}
 		} else if(box instanceof LetterBox) {
-			Logger.log(Logger.DEBUG, "Updating box type to LETTERBOX (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+			Logger.log(Logger.LogLevel.DEBUG, "Updating box type to LETTERBOX (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 			this.setBackground(Color.white);
 			this.textPane.setBackground(Color.white);
 			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 40));

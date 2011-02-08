@@ -26,7 +26,7 @@ public class BoxPanelMouseListener implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		Box box = boxPanel.getBox();
 		
-		Logger.log(Logger.TRACE, "Button clicked (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		Logger.log(Logger.LogLevel.TRACE, "Button clicked (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 		
 		// If other button than right button is pressed or if we're clicking
 		// on a non-editable field, do nothing.
@@ -34,8 +34,8 @@ public class BoxPanelMouseListener implements MouseListener {
 				|| box instanceof StaticBox)
 			return;
 
-		Logger.log(Logger.TRACE, "Right button clicked (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");			
-		Logger.log(Logger.TRACE, "Showing dialog (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		Logger.log(Logger.LogLevel.TRACE, "Right button clicked (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");			
+		Logger.log(Logger.LogLevel.TRACE, "Showing dialog (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 					
 		// Determine message
 		String message = "";
@@ -53,7 +53,7 @@ public class BoxPanelMouseListener implements MouseListener {
 				message, message, JOptionPane.PLAIN_MESSAGE, null, null,
 				currentValue);
 
-		Logger.log(Logger.DEBUG, "Result from dialog: " + result + " (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		Logger.log(Logger.LogLevel.DEBUG, "Result from dialog: " + result + " (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 
 		// Format letter
 		if(result == "" || result == null) {
@@ -80,14 +80,14 @@ public class BoxPanelMouseListener implements MouseListener {
 	public void mousePressed(MouseEvent e) {
 		Box box = boxPanel.getBox();
 		
-		Logger.log(Logger.TRACE, "Button pressed (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		Logger.log(Logger.LogLevel.TRACE, "Button pressed (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 		
 		// If other button than left button is pressed, do nothing.
 		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) != InputEvent.BUTTON1_MASK)
 			return;
 		
-		Logger.log(Logger.TRACE, "Left button pressed (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");			
-		Logger.log(Logger.TRACE, "Cycling box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		Logger.log(Logger.LogLevel.TRACE, "Left button pressed (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");			
+		Logger.log(Logger.LogLevel.TRACE, "Cycling box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 		
 		// Cycle box type and update box to new type
 		if(box instanceof StaticBox) {
