@@ -24,14 +24,14 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 	 * @return List of answers.
 	 */
 	public List<String> getAnswers(String word, int length) {
-		Logger.log(Logger.DEBUG, "Downloading answers for " + word + " with a length of " + length +  ".");
+		Logger.log(Logger.LogLevel.DEBUG, "Downloading answers for " + word + " with a length of " + length +  ".");
 		
 		// Try to read the contents at the URL.
 		String page = "";
 		try {
 			page = new URLReader().readURL(getConnectionURL(word, length));
 		} catch (IOException e) {
-			Logger.log(Logger.ERROR, "Downloading answers for " + word + " failed: " + e.getMessage() + ".");
+			Logger.log(Logger.LogLevel.ERROR, "Downloading answers for " + word + " failed: " + e.getMessage() + ".");
 			e.printStackTrace();
 		}
 		
@@ -57,7 +57,7 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 			}
 		}
 		
-		Logger.log(Logger.DEBUG, "Found " + answers.size() + " answers for " + word + " with a length of " + length +  ".");
+		Logger.log(Logger.LogLevel.DEBUG, "Found " + answers.size() + " answers for " + word + " with a length of " + length +  ".");
 		
 		return answers;
 	}

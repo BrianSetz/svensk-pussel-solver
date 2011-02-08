@@ -31,7 +31,7 @@ public class BruteForceSolver implements Solver {
 				if(grid[x][y] instanceof WordBox) {
 					WordBox wordBox = (WordBox) grid[x][y];
 					int length = getWordLength(wordBox);
-					Logger.log(Logger.TRACE, "Downloading answers for " + wordBox.getWord() + ".");
+					Logger.log(Logger.LogLevel.TRACE, "Downloading answers for " + wordBox.getWord() + ".");
 					List<String> possibleAnswers = puzzleDictionary.getAnswers(wordBox.getWord(), length);
 					possibleAnswersGrid[x][y] = possibleAnswers;				
 				}
@@ -50,11 +50,11 @@ public class BruteForceSolver implements Solver {
 					if(grid[x][y] instanceof WordBox) {
 						WordBox wordBox = (WordBox) grid[x][y];
 						List<String> possibleAnswers = possibleAnswersGrid[x][y];
-						Logger.log(Logger.TRACE, "Checking answers for " + wordBox.getWord() + ".");
+						Logger.log(Logger.LogLevel.TRACE, "Checking answers for " + wordBox.getWord() + ".");
 						
 						// No answers in list
 						if(possibleAnswers.size() <= 0) {
-							Logger.log(Logger.TRACE, "Skipping " + wordBox.getWord() + ", already answered or no answers available.");
+							Logger.log(Logger.LogLevel.TRACE, "Skipping " + wordBox.getWord() + ", already answered or no answers available.");
 							continue;
 						}
 						
@@ -63,17 +63,17 @@ public class BruteForceSolver implements Solver {
 						for (Iterator<String> iter = possibleAnswers.iterator(); iter.hasNext();) {
 							String answer = iter.next();
 							if(isPossibleAnswer(wordBox, answer)) {
-								Logger.log(Logger.DEBUG, "Found a word with a possible answer, for " + wordBox.getWord() + ": " + answer +  ".");
+								Logger.log(Logger.LogLevel.DEBUG, "Found a word with a possible answer, for " + wordBox.getWord() + ": " + answer +  ".");
 								answerCount++;								
 							} else {
-								Logger.log(Logger.TRACE, "Answer will not fit for" + wordBox.getWord() + ". removing: " + answer +  ".");
+								Logger.log(Logger.LogLevel.TRACE, "Answer will not fit for" + wordBox.getWord() + ". removing: " + answer +  ".");
 								iter.remove();
 							}
 						}
 						
 						// If there is one possible answer, use it
 						if(answerCount == 1) {
-							Logger.log(Logger.DEBUG, "Found a word with a single answer, for " + wordBox.getWord() + ": " + possibleAnswers.get(0) +  ".");
+							Logger.log(Logger.LogLevel.DEBUG, "Found a word with a single answer, for " + wordBox.getWord() + ": " + possibleAnswers.get(0) +  ".");
 							changesInGrid = true;
 							setWord(wordBox, possibleAnswers.get(0));
 							possibleAnswers.remove(0);
@@ -97,7 +97,7 @@ public class BruteForceSolver implements Solver {
 	}
 
 	private boolean isPossibleAnswer(WordBox wordBox, String word) {
-		Logger.log(Logger.DEBUG, "Checking if " + word + " is a possible answer for: " + wordBox.getWord() + ".");
+		Logger.log(Logger.LogLevel.DEBUG, "Checking if " + word + " is a possible answer for: " + wordBox.getWord() + ".");
 
 		// Move coordinates
 		int movedCoordinates[] = moveXY(wordBox.getXCoordinate(), wordBox.getYCoordinate(), wordBox.getDirection());	
@@ -129,7 +129,7 @@ public class BruteForceSolver implements Solver {
 	}
 
 	private int getWordLength(WordBox wordBox) {
-		Logger.log(Logger.DEBUG, "Calculating length for " + wordBox.getWord() + ".");
+		Logger.log(Logger.LogLevel.DEBUG, "Calculating length for " + wordBox.getWord() + ".");
 		
 		// Move coordinates
 		int movedCoordinates[] = moveXY(wordBox.getXCoordinate(), wordBox.getYCoordinate(), wordBox.getDirection());	
@@ -152,12 +152,12 @@ public class BruteForceSolver implements Solver {
 				break;			
 		}
 
-		Logger.log(Logger.TRACE, "Found length " + length + " for " + wordBox.getWord() + ".");
+		Logger.log(Logger.LogLevel.TRACE, "Found length " + length + " for " + wordBox.getWord() + ".");
 		return length;		
 	}
 	
 	private void setWord(WordBox wordBox, String word) {
-		Logger.log(Logger.DEBUG, "Setting word " + word + " for: " + wordBox.getWord() + ".");
+		Logger.log(Logger.LogLevel.DEBUG, "Setting word " + word + " for: " + wordBox.getWord() + ".");
 		
 		// Move coordinates
 		int movedCoordinates[] = moveXY(wordBox.getXCoordinate(), wordBox.getYCoordinate(), wordBox.getDirection());	
@@ -182,7 +182,7 @@ public class BruteForceSolver implements Solver {
 				break;			
 		}
 		
-		Logger.log(Logger.TRACE, "Set word " + word + " for: " + wordBox.getWord() + ".");
+		Logger.log(Logger.LogLevel.TRACE, "Set word " + word + " for: " + wordBox.getWord() + ".");
 	}
 	
 	private int[] moveXY(int x, int y, int direction) {
