@@ -9,7 +9,6 @@ import nl.svenskpusselsolver.dataobjects.WordBox;
 import nl.svenskpusselsolver.dictionary.MijnWoordenBoekDotNL;
 import nl.svenskpusselsolver.dictionary.PuzzleDictionary;
 import nl.svenskpusselsolver.logging.Logger;
-import nl.svenskpusselsolver.logging.Logger.LogLevel;
 
 public class BruteForceSolver implements Solver {
 	private Box[][] grid;
@@ -22,6 +21,11 @@ public class BruteForceSolver implements Solver {
 	}
 
 	@Override
+	/**
+	 * Will try to solve the puzzle specified in the grid and return the solved grid.
+	 * @param grid Grid to solve.
+	 * @return Solved grid.
+	 */
 	public Box[][] solvePuzzle(Box[][] grid) {
 		this.grid = grid;
 		this.possibleAnswersGrid = new List[grid.length][grid[0].length];
@@ -39,6 +43,7 @@ public class BruteForceSolver implements Solver {
 			}
 		}
 
+		// Defines whether to continue looping or whether to stop.
 		boolean changesInGrid = true;
 
 		// Find words that fit in the current situation, those are
@@ -48,6 +53,7 @@ public class BruteForceSolver implements Solver {
 			changesInGrid = false;
 			for (int x = 0; x < grid.length; x++) {
 				for (int y = 0; y < grid[0].length; y++) {
+					// If the current item in the grid is a WordBox
 					if (grid[x][y] instanceof WordBox) {
 						WordBox wordBox = (WordBox) grid[x][y];
 						List<String> possibleAnswers = possibleAnswersGrid[x][y];
@@ -66,83 +72,104 @@ public class BruteForceSolver implements Solver {
 						for (Iterator<String> iter = possibleAnswers.iterator(); iter
 								.hasNext();) {
 							String answer = iter.next();
+							// If word is a possible answer, add it to the count
 							if (isPossibleAnswer(wordBox, answer)) {
 								Logger.log(Logger.LogLevel.DEBUG, "Found a word with a possible answer, for " + wordBox.getWord() + ": " + answer + ".");
 								answerCount++;
+							// If word is not a possible answer, remove it
 							} else {
 								Logger.log(Logger.LogLevel.TRACE, "Answer will not fit for" + wordBox.getWord() + ". removing: " + answer + ".");
 								iter.remove();
 							}
 						}
 
-						// If there is one possible answer, use it
+						// If there is one possible answer, use it and remove it from the list
 						if (answerCount == 1) {
 							Logger.log(Logger.LogLevel.DEBUG, "Found a word with a single answer, for " + wordBox.getWord() + ": " + possibleAnswers.get(0) + ".");
 							changesInGrid = true;
-							setWord(wordBox, possibleAnswers.get(0));
-							possibleAnswers.remove(0);
-							// If not, check if there are any letters that can
-							// be filled in
+							if(setAnswer(wordBox, possibleAnswers.get(0)))
+								possibleAnswers.remove(0);
+						// If not, check if there are any letters that can be filled in
 						} else if (answerCount > 1) {
 							Iterator<String> iter = possibleAnswers.iterator();
 							char[] possibleLetters = iter.next().toCharArray();
 
+							// Loop all possible answers
 							while (iter.hasNext()) {
 								char[] answer = iter.next().toCharArray();
 
+								// Loop all letters in the answers, replace a letter with a space if it doesn't fit
 								for (int i = 0; i < possibleLetters.length; i++) {
 									if (possibleLetters[i] != answer[i])
 										possibleLetters[i] = ' ';
 								}
 							}
 
-							// If it contains letters
+							// Check if the possible answer does not contain spaces
 							if (!new String(possibleLetters).matches(" *")) {
-								if (setWord(wordBox, possibleLetters)) {
+								if (setAnswer(wordBox, possibleLetters)) {
 									changesInGrid = true;
 								}
 							}
 						}
-					}
-				}
-			}
-		}
-
-		Box[][] tmpGrid = grid.clone();
-		List<String>[][] tmpPossibleAnswersGrid = possibleAnswersGrid.clone();
+					} // End instance of WordBox
+				} // End Y loop
+			} // End X loop
+		} // End while loop
 
 		return grid;
 	}
 
-	private boolean isPossibleAnswer(WordBox wordBox, String word) {
-		Logger.log(Logger.LogLevel.DEBUG, "Checking if " + word
+	/**
+	 * Check if the word is a possible answer for the given word box.
+	 * @param wordBox Word box to find a possible answer for.
+	 * @param possibleAnswer Answer to check.
+	 * @return True if the word is a possible answer.
+	 */
+	private boolean isPossibleAnswer(WordBox wordBox, String possibleAnswer) {
+		Logger.log(Logger.LogLevel.DEBUG, "Checking if " + possibleAnswer
 				+ " is a possible answer for: " + wordBox.getWord() + ".");
 
-		int position = 0;
+		// Look for the next letter box
 		WordBox.Direction direction = wordBox.getDirection();
 		LetterBox letterBox = getNextLetterBox(wordBox, direction);
 
-		while (letterBox instanceof LetterBox) {
-			if (letterBox.getLetter() != '\u0000' && letterBox.getLetter() != ' ' && letterBox.getLetter() != word.charAt(position))
+		// Loop all letter boxes and all characters in the possible answer
+		int position = 0;
+		while (letterBox != null) {
+			// If there already is something in the box that is not 'null', a space, or the same letter: return false
+			if (letterBox.getLetter() != '\u0000' && letterBox.getLetter() != ' ' && letterBox.getLetter() != possibleAnswer.charAt(position))
 				return false;
+			
+			// Move to next character
 			position++;
 
+			// Look for the next letter box
 			letterBox = getNextLetterBox(letterBox, direction);
 		}
 		
+		// Word is a possible answer
 		return true;
 	}
 
+	/**
+	 * Get the length of the answer we are looking for.
+	 * @param wordBox The word box to find the answer for.
+	 * @return The length of the answer.
+	 */
 	private int getWordLength(WordBox wordBox) {
 		Logger.log(Logger.LogLevel.DEBUG, "Calculating length for " + wordBox.getWord() + ".");
 
-		int length = 0;
-
+		// Look for the next letter box
 		WordBox.Direction direction = wordBox.getDirection();
 		LetterBox letterBox = getNextLetterBox(wordBox, direction);
 
+		// Continue looping until the last letterbox is found and count the total letterboxes
+		int length = 0;
 		while (letterBox != null) {
 			length++;
+			
+			// Look for the next letter box
 			letterBox = getNextLetterBox(letterBox, direction);
 		}
 
@@ -150,72 +177,113 @@ public class BruteForceSolver implements Solver {
 		return length;
 	}
 
-	private boolean setWord(WordBox wordBox, String word) {
-		return setWord(wordBox, word.toCharArray());
+	/**
+	 * Set the answer to a wordbox.
+	 * @param wordBox Wordbox to set the answer for.
+	 * @param answer The answer to set.
+	 * @return True if there the answer changed the old answer
+	 */
+	private boolean setAnswer(WordBox wordBox, String answer) {
+		return setAnswer(wordBox, answer.toCharArray());
 	}
 
 	/**
-	 * @return true if any letters where filled in
+	 * Set the answer to a wordbox.
+	 * @param wordBox Wordbox to set the answer for.
+	 * @param answer The answer to set.
+	 * @return True if there the answer changed the old answer
 	 */
-	private boolean setWord(WordBox wordBox, char[] word) {
-		Logger.log(Logger.LogLevel.DEBUG, "Setting word \"" + new String(word) + "\" for: " + wordBox.getWord() + ".");
+	private boolean setAnswer(WordBox wordBox, char[] answer) {
+		Logger.log(Logger.LogLevel.DEBUG, "Setting word \"" + new String(answer) + "\" for: " + wordBox.getWord() + ".");
 
-		boolean lettersChanged = false;
-		int position = 0;
+		// Look for the next letter box
 		WordBox.Direction direction = wordBox.getDirection();
 		LetterBox letterBox = getNextLetterBox(wordBox, direction);
 
-		while (letterBox instanceof LetterBox) {
-			if (setLetter(letterBox, word[position])) {
+		// Loop all letterboxes and set each letter of the answer
+		boolean lettersChanged = false;
+		int position = 0;
+		while (letterBox != null) {
+			// If the letter has been set, changes = true
+			if (setLetter(letterBox, answer[position])) {
 				lettersChanged = true;
 			}
+			
+			// Move letter
 			position++;
-
+			
+			// Look for the next letter box
 			letterBox = getNextLetterBox(letterBox, direction);
 		}
 
-		Logger.log(Logger.LogLevel.TRACE, "Set word \"" + new String(word) + "\" for: " + wordBox.getWord() + ".");
+		Logger.log(Logger.LogLevel.TRACE, "Set word \"" + new String(answer) + "\" for: " + wordBox.getWord() + ".");
 		return lettersChanged;
 	}
 
 	/**
-	 * @return true if the letter was filled in
+	 * Set the letter in the wordbox specified.
+	 * @param letterBox The letter box to set.
+	 * @param letter The letter to set.
+	 * @return True if the letter has been set, false if the letter has not been set.
 	 */
 	private boolean setLetter(LetterBox letterBox, char letter) {
+		// If the letter is not a space and the letter is different from the current letter:
 		if (letter != ' ' && letterBox.getLetter() != letter) {
+			// Set the new letter
 			letterBox.setLetter(letter);
 			return true;
 		}
+		
+		// No changes
 		return false;
 	}
 
-	private LetterBox getNextLetterBox(Box letterBox,
-			WordBox.Direction direction) {
+	/**
+	 * Get the next letterbox in the specified direction.
+	 * @param letterBox Current letterbox.
+	 * @param direction Direction.
+	 * @return The next letterbox or null if there is none.
+	 */
+	private LetterBox getNextLetterBox(Box letterBox, WordBox.Direction direction) {
+		// Get current coordinates.
 		int x = letterBox.getXCoordinate();
 		int y = letterBox.getYCoordinate();
+		
+		// Move current coordinates.
 		switch (direction) {
-		case UP:
-			y--;
-			break;
-		case RIGHT:
-			x++;
-			break;
-		case DOWN:
-			y++;
-			break;
-		case LEFT:
-			y--;
-			break;
+			case UP:
+				y--;
+				break;
+			case RIGHT:
+				x++;
+				break;
+			case DOWN:
+				y++;
+				break;
+			case LEFT:
+				y--;
+				break;
 		}
+		
+		// Check if coordinates are not out of bounds.
 		if (!isOutOfBounds(x, y)) {
+			
+			// Check if next box is a letterbox
 			Box nextBox = grid[x][y];
 			if (nextBox instanceof LetterBox)
 				return (LetterBox) nextBox;
 		}
 
+		// No next letterbox
 		return null;
 	}
 
+	/**
+	 * Check if index of x and y are out of bounds.
+	 * @param x X coordinate.
+	 * @param y Y coordinate.
+	 * @return True if out of bounds, false if not out of bounds.
+	 */
 	private boolean isOutOfBounds(int x, int y) {
 		return y < 0 || x < 0 || x > grid.length - 1 || y > grid.length - 1;
 	}
