@@ -31,7 +31,6 @@ public class PuzzleFrame extends JFrame {
 		Logger.log(Logger.LogLevel.TRACE, "Building PuzzleFrame.");
 		
 		contentPane = this.getContentPane();
-
 		
 		Logger.log(Logger.LogLevel.TRACE, "Building menu.");
 		this.initializePuzzle(10, 10);
