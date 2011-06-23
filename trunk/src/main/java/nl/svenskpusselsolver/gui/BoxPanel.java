@@ -22,6 +22,8 @@ import org.apache.log4j.Logger;
  * Represents a box within the puzzle.
  */
 public class BoxPanel extends JPanel {	
+	private static final long serialVersionUID = 1L;
+
 	private final static Logger logger = Logger.getLogger(BoxPanel.class);
 	
 	private JTextPane textPane; // Text container

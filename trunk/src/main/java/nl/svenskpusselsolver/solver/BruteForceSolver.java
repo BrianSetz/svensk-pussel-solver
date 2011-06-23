@@ -1,7 +1,9 @@
 package nl.svenskpusselsolver.solver;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import nl.svenskpusselsolver.dataobjects.Box;
 import nl.svenskpusselsolver.dataobjects.LetterBox;
@@ -14,6 +16,8 @@ import org.apache.log4j.Logger;
 public class BruteForceSolver implements Solver {
 	private final static Logger logger = Logger.getLogger(BruteForceSolver.class);
 	
+	private static Map<String, List<String>> cachedPossibleAnswers = new HashMap<String, List<String>>();
+	
 	private Box[][] grid;
 	private List<String>[][] possibleAnswersGrid;
 	private PuzzleDictionary puzzleDictionary;
@@ -22,6 +26,7 @@ public class BruteForceSolver implements Solver {
 		puzzleDictionary = new MijnWoordenBoekDotNL();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	/**
 	 * Will try to solve the puzzle specified in the grid and return the solved grid.
@@ -38,8 +43,18 @@ public class BruteForceSolver implements Solver {
 				if (grid[x][y] instanceof WordBox) {
 					WordBox wordBox = (WordBox) grid[x][y];
 					int length = getWordLength(wordBox);
-					logger.trace("Downloading answers for " + wordBox.getWord() + ".");
-					List<String> possibleAnswers = puzzleDictionary.getAnswers(wordBox.getWord(), length);
+					
+					// Check if word is cached
+					List<String> possibleAnswers = null;
+					if(cachedPossibleAnswers.containsKey(wordBox.getWord())) {
+						logger.trace("Cached answers for " + wordBox.getWord() + ".");
+						possibleAnswers = cachedPossibleAnswers.get(wordBox.getWord());
+					} else {					
+						logger.trace("Downloading answers for " + wordBox.getWord() + ".");
+						possibleAnswers = puzzleDictionary.getAnswers(wordBox.getWord(), length);
+						cachedPossibleAnswers.put(wordBox.getWord(), possibleAnswers);
+					}
+					
 					possibleAnswersGrid[x][y] = possibleAnswers;
 				}
 			}
