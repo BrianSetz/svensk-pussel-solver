@@ -15,12 +15,15 @@ import nl.svenskpusselsolver.dataobjects.Box;
 import nl.svenskpusselsolver.dataobjects.LetterBox;
 import nl.svenskpusselsolver.dataobjects.StaticBox;
 import nl.svenskpusselsolver.dataobjects.WordBox;
-import nl.svenskpusselsolver.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 /**
  * Represents a box within the puzzle.
  */
 public class BoxPanel extends JPanel {	
+	private final static Logger logger = Logger.getLogger(BoxPanel.class);
+	
 	private JTextPane textPane; // Text container
 	private JLabel directionLabel; // Direction of wordbox
 	private Box box;
@@ -33,7 +36,7 @@ public class BoxPanel extends JPanel {
 	public BoxPanel(Box box) {
 		super();
 		
-		Logger.log(Logger.LogLevel.TRACE, "Building BoxPanel (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		logger.trace("Building BoxPanel (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 
 		// Initialize box
 		BoxPanelMouseListener bpml = new BoxPanelMouseListener(this);
@@ -62,7 +65,7 @@ public class BoxPanel extends JPanel {
 														// manager happy
 		this.updateType(box); // Update
 		
-		Logger.log(Logger.LogLevel.INFO, "BoxPanel built (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		logger.info("BoxPanel built (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 	}
 
 	/**
@@ -93,12 +96,12 @@ public class BoxPanel extends JPanel {
 	 * @param box New box.
 	 */
 	public void updateType(Box box) {
-		Logger.log(Logger.LogLevel.TRACE, "Updating box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		logger.trace("Updating box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 		//type = newType;
 
 		// Update box to new type
 		if(box instanceof StaticBox) {
-			Logger.log(Logger.LogLevel.DEBUG, "Updating box type to STATICBOX (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+			logger.debug("Updating box type to STATICBOX (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 			this.setBackground(Color.gray);
 			this.textPane.setVisible(false);
 			this.directionLabel.setVisible(false);
@@ -114,25 +117,26 @@ public class BoxPanel extends JPanel {
 			
 			switch (direction) {
 				case UP:
-					Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, UP (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+					logger.debug("Updating box type to WORDBOX, UP (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 					this.directionLabel.setText("^");
 					break;
 				case RIGHT:
-					Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, RIGHT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+					logger.debug("Updating box type to WORDBOX, RIGHT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 					this.directionLabel.setText(">");
 					break;
 				case DOWN:
-					Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, DOWN (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+					logger.debug("Updating box type to WORDBOX, DOWN (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 					this.directionLabel.setText("v");
 					break;
 				case LEFT:
-					Logger.log(Logger.LogLevel.DEBUG, "Updating box type to WORDBOX, LEFT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+					logger.debug("Updating box type to WORDBOX, LEFT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 					this.directionLabel.setText("<");
 					break;
 			}
 			
 		} else if(box instanceof LetterBox) {
-			Logger.log(Logger.LogLevel.DEBUG, "Updating box type to LETTERBOX (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+			logger.debug("Updating box type to LETTERBOX (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+			
 			this.setBackground(Color.white);
 			this.textPane.setBackground(Color.white);
 			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 40));

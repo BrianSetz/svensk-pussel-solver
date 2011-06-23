@@ -13,13 +13,16 @@ import javax.swing.JMenuItem;
 
 import nl.svenskpusselsolver.dataobjects.Box;
 import nl.svenskpusselsolver.dataobjects.LetterBox;
-import nl.svenskpusselsolver.logging.Logger;
 import nl.svenskpusselsolver.solver.BruteForceSolver;
+
+import org.apache.log4j.Logger;
 
 /**
  * This is the main frame of the puzzle GUI.
  */
 public class PuzzleFrame extends JFrame {
+	private final static Logger logger = Logger.getLogger(PuzzleFrame.class);
+	
 	private Container contentPane;
 	private BoxPanel[][] boxPanelGrid;
 	//private Box[][] grid;
@@ -28,11 +31,11 @@ public class PuzzleFrame extends JFrame {
 	 * Puzzle frame contains all the boxes.
 	 */
 	public PuzzleFrame() {
-		Logger.log(Logger.LogLevel.TRACE, "Building PuzzleFrame.");
+		logger.trace("Building PuzzleFrame.");
 		
 		contentPane = this.getContentPane();
 		
-		Logger.log(Logger.LogLevel.TRACE, "Building menu.");
+		logger.trace("Building menu.");
 		this.initializePuzzle(10, 10);
 
 		// Build MenuBar
@@ -82,13 +85,13 @@ public class PuzzleFrame extends JFrame {
 		});
 		file.add(exitItem);	
 		
-		Logger.log(Logger.LogLevel.TRACE, "Initializing frame.");
+		logger.trace("Initializing frame.");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Svensk Pussel Solver");
 		this.pack();
 		this.setVisible(true);
 		
-		Logger.log(Logger.LogLevel.INFO, "PuzzleFrame built.");
+		logger.info("PuzzleFrame built.");
 	}
 
 	public PuzzleFrame(Box[][] grid) {	
@@ -96,7 +99,7 @@ public class PuzzleFrame extends JFrame {
 		
 		//this.grid = grid;
 		
-		Logger.log(Logger.LogLevel.TRACE, "Initializing grid with content.");
+		logger.trace("Initializing grid with content.");
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
 				boxPanelGrid[x][y].setBox(grid[x][y]);
@@ -116,7 +119,7 @@ public class PuzzleFrame extends JFrame {
 		contentPane.setBackground(Color.black);
 		contentPane.setLayout(new GridLayout(x, y, 1, 1));
 
-		Logger.log(Logger.LogLevel.TRACE, "Creating boxes for grid.");
+		logger.trace("Creating boxes for grid.");
 		// Create all boxes
 		for (int i = 0; i < x; i++) {
 			for (int j = 0; j < y; j++) {

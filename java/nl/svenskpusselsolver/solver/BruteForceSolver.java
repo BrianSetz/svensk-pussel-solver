@@ -8,12 +8,14 @@ import nl.svenskpusselsolver.dataobjects.LetterBox;
 import nl.svenskpusselsolver.dataobjects.WordBox;
 import nl.svenskpusselsolver.dictionary.MijnWoordenBoekDotNL;
 import nl.svenskpusselsolver.dictionary.PuzzleDictionary;
-import nl.svenskpusselsolver.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 public class BruteForceSolver implements Solver {
+	private final static Logger logger = Logger.getLogger(BruteForceSolver.class);
+	
 	private Box[][] grid;
 	private List<String>[][] possibleAnswersGrid;
-
 	private PuzzleDictionary puzzleDictionary;
 
 	public BruteForceSolver() {
@@ -36,7 +38,7 @@ public class BruteForceSolver implements Solver {
 				if (grid[x][y] instanceof WordBox) {
 					WordBox wordBox = (WordBox) grid[x][y];
 					int length = getWordLength(wordBox);
-					Logger.log(Logger.LogLevel.TRACE, "Downloading answers for " + wordBox.getWord() + ".");
+					logger.trace("Downloading answers for " + wordBox.getWord() + ".");
 					List<String> possibleAnswers = puzzleDictionary.getAnswers(wordBox.getWord(), length);
 					possibleAnswersGrid[x][y] = possibleAnswers;
 				}
@@ -57,13 +59,11 @@ public class BruteForceSolver implements Solver {
 					if (grid[x][y] instanceof WordBox) {
 						WordBox wordBox = (WordBox) grid[x][y];
 						List<String> possibleAnswers = possibleAnswersGrid[x][y];
-						Logger.log(Logger.LogLevel.TRACE,
-								"Checking answers for " + wordBox.getWord()
-										+ ".");
+						logger.trace("Checking answers for " + wordBox.getWord() + ".");
 
 						// No answers in list
 						if (possibleAnswers.size() <= 0) {
-							Logger.log( Logger.LogLevel.TRACE, "Skipping " + wordBox.getWord() + ", already answered or no answers available.");
+							logger.trace("Skipping " + wordBox.getWord() + ", already answered or no answers available.");
 							continue;
 						}
 
@@ -74,18 +74,18 @@ public class BruteForceSolver implements Solver {
 							String answer = iter.next();
 							// If word is a possible answer, add it to the count
 							if (isPossibleAnswer(wordBox, answer)) {
-								Logger.log(Logger.LogLevel.DEBUG, "Found a word with a possible answer, for " + wordBox.getWord() + ": " + answer + ".");
+								logger.debug("Found a word with a possible answer, for " + wordBox.getWord() + ": " + answer + ".");
 								answerCount++;
 							// If word is not a possible answer, remove it
 							} else {
-								Logger.log(Logger.LogLevel.TRACE, "Answer will not fit for" + wordBox.getWord() + ". removing: " + answer + ".");
+								logger.trace("Answer will not fit for" + wordBox.getWord() + ". removing: " + answer + ".");
 								iter.remove();
 							}
 						}
 
 						// If there is one possible answer, use it and remove it from the list
 						if (answerCount == 1) {
-							Logger.log(Logger.LogLevel.DEBUG, "Found a word with a single answer, for " + wordBox.getWord() + ": " + possibleAnswers.get(0) + ".");
+							logger.debug("Found a word with a single answer, for " + wordBox.getWord() + ": " + possibleAnswers.get(0) + ".");
 							changesInGrid = true;
 							if(setAnswer(wordBox, possibleAnswers.get(0)))
 								possibleAnswers.remove(0);
@@ -127,7 +127,7 @@ public class BruteForceSolver implements Solver {
 	 * @return True if the word is a possible answer.
 	 */
 	private boolean isPossibleAnswer(WordBox wordBox, String possibleAnswer) {
-		Logger.log(Logger.LogLevel.DEBUG, "Checking if " + possibleAnswer
+		logger.debug("Checking if " + possibleAnswer
 				+ " is a possible answer for: " + wordBox.getWord() + ".");
 
 		// Look for the next letter box
@@ -158,7 +158,7 @@ public class BruteForceSolver implements Solver {
 	 * @return The length of the answer.
 	 */
 	private int getWordLength(WordBox wordBox) {
-		Logger.log(Logger.LogLevel.DEBUG, "Calculating length for " + wordBox.getWord() + ".");
+		logger.debug("Calculating length for " + wordBox.getWord() + ".");
 
 		// Look for the next letter box
 		WordBox.Direction direction = wordBox.getDirection();
@@ -173,7 +173,7 @@ public class BruteForceSolver implements Solver {
 			letterBox = getNextLetterBox(letterBox, direction);
 		}
 
-		Logger.log(Logger.LogLevel.TRACE, "Found length " + length + " for " + wordBox.getWord() + ".");
+		logger.trace("Found length " + length + " for " + wordBox.getWord() + ".");
 		return length;
 	}
 
@@ -194,7 +194,7 @@ public class BruteForceSolver implements Solver {
 	 * @return True if there the answer changed the old answer
 	 */
 	private boolean setAnswer(WordBox wordBox, char[] answer) {
-		Logger.log(Logger.LogLevel.DEBUG, "Setting word \"" + new String(answer) + "\" for: " + wordBox.getWord() + ".");
+		logger.debug("Setting word \"" + new String(answer) + "\" for: " + wordBox.getWord() + ".");
 
 		// Look for the next letter box
 		WordBox.Direction direction = wordBox.getDirection();
@@ -216,7 +216,7 @@ public class BruteForceSolver implements Solver {
 			letterBox = getNextLetterBox(letterBox, direction);
 		}
 
-		Logger.log(Logger.LogLevel.TRACE, "Set word \"" + new String(answer) + "\" for: " + wordBox.getWord() + ".");
+		logger.trace("Set word \"" + new String(answer) + "\" for: " + wordBox.getWord() + ".");
 		return lettersChanged;
 	}
 
