@@ -5,11 +5,15 @@ import nl.svenskpusselsolver.dataobjects.LetterBox;
 import nl.svenskpusselsolver.dataobjects.StaticBox;
 import nl.svenskpusselsolver.dataobjects.WordBox;
 import nl.svenskpusselsolver.gui.PuzzleFrame;
-import nl.svenskpusselsolver.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 public class Main {
+	private final static Logger logger = Logger.getLogger(Main.class);
+	
 	public static void main(String[] args) throws Exception {
-		Logger.log(Logger.LogLevel.TRACE, "Initializing demo puzzle.");
+		
+		logger.trace("Initializing demo puzzle.");
 		
 		Box[][] grid = new Box[10][10];
 

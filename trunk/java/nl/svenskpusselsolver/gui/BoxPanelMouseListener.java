@@ -10,12 +10,15 @@ import nl.svenskpusselsolver.dataobjects.Box;
 import nl.svenskpusselsolver.dataobjects.LetterBox;
 import nl.svenskpusselsolver.dataobjects.StaticBox;
 import nl.svenskpusselsolver.dataobjects.WordBox;
-import nl.svenskpusselsolver.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 /**
  * Mouse listener for the box panel.
  */
 public class BoxPanelMouseListener implements MouseListener {
+	private final static Logger logger = Logger.getLogger(BoxPanelMouseListener.class);
+	
 	private BoxPanel boxPanel;
 	
 	public BoxPanelMouseListener(BoxPanel boxPanel) {
@@ -26,7 +29,7 @@ public class BoxPanelMouseListener implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		Box box = boxPanel.getBox();
 		
-		Logger.log(Logger.LogLevel.TRACE, "Button clicked (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		logger.trace("Button clicked (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 		
 		// If other button than right button is pressed or if we're clicking
 		// on a non-editable field, do nothing.
@@ -34,8 +37,8 @@ public class BoxPanelMouseListener implements MouseListener {
 				|| box instanceof StaticBox)
 			return;
 
-		Logger.log(Logger.LogLevel.TRACE, "Right button clicked (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");			
-		Logger.log(Logger.LogLevel.TRACE, "Showing dialog (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		logger.trace("Right button clicked (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");			
+		logger.trace("Showing dialog (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 					
 		// Determine message
 		String message = "";
@@ -53,7 +56,7 @@ public class BoxPanelMouseListener implements MouseListener {
 				message, message, JOptionPane.PLAIN_MESSAGE, null, null,
 				currentValue);
 
-		Logger.log(Logger.LogLevel.DEBUG, "Result from dialog: " + result + " (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		logger.debug("Result from dialog: " + result + " (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 
 		// Format letter
 		if(result == "" || result == null) {
@@ -80,14 +83,14 @@ public class BoxPanelMouseListener implements MouseListener {
 	public void mousePressed(MouseEvent e) {
 		Box box = boxPanel.getBox();
 		
-		Logger.log(Logger.LogLevel.TRACE, "Button pressed (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		logger.trace("Button pressed (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 		
 		// If other button than left button is pressed, do nothing.
 		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) != InputEvent.BUTTON1_MASK)
 			return;
 		
-		Logger.log(Logger.LogLevel.TRACE, "Left button pressed (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");			
-		Logger.log(Logger.LogLevel.TRACE, "Cycling box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		logger.trace("Left button pressed (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");			
+		logger.trace("Cycling box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 		
 		// Cycle box type and update box to new type
 		if(box instanceof StaticBox) {

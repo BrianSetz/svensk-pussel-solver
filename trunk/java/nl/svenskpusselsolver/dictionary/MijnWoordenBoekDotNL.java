@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nl.svenskpusselsolver.logging.Logger;
+import org.apache.log4j.Logger;
+
 import nl.svenskpusselsolver.util.URLReader;
 
 /**
@@ -14,6 +15,8 @@ import nl.svenskpusselsolver.util.URLReader;
  * find answers.
  */
 public class MijnWoordenBoekDotNL implements PuzzleDictionary {
+	private final static Logger logger = Logger.getLogger(MijnWoordenBoekDotNL.class);
+	
 	/**
 	 * Return the answer(s) for a given word and length.
 	 * 
@@ -24,15 +27,14 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 	 * @return List of answers.
 	 */
 	public List<String> getAnswers(String word, int length) {
-		Logger.log(Logger.LogLevel.DEBUG, "Downloading answers for " + word + " with a length of " + length +  ".");
+		logger.debug("Downloading answers for " + word + " with a length of " + length +  ".");
 		
 		// Try to read the contents at the URL.
 		String page = "";
 		try {
 			page = new URLReader().readURL(getConnectionURL(word, length));
 		} catch (IOException e) {
-			Logger.log(Logger.LogLevel.ERROR, "Downloading answers for " + word + " failed: " + e.getMessage() + ".");
-			e.printStackTrace();
+			logger.error("Downloading answers for " + word + " failed: " + e.getMessage() + ".", e);
 		}
 		
 		Pattern pagePattern = Pattern.compile("(background-color:#ddd>(<big){0})(((<font)|[^<]).*?)</td>");
@@ -57,7 +59,7 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 			}
 		}
 		
-		Logger.log(Logger.LogLevel.DEBUG, "Found " + answers.size() + " answers for " + word + " with a length of " + length +  ".");
+		logger.debug("Found " + answers.size() + " answers for " + word + " with a length of " + length +  ".");
 		
 		return answers;
 	}

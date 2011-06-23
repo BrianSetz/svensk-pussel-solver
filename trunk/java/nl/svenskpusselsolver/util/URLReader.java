@@ -6,9 +6,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import nl.svenskpusselsolver.logging.Logger;
+import nl.svenskpusselsolver.solver.BruteForceSolver;
+
+import org.apache.log4j.Logger;
 
 public class URLReader {
+	private final static Logger logger = Logger.getLogger(URLReader.class);
+	
 	/**
 	 * Read contents at URL
 	 * 
@@ -18,7 +22,7 @@ public class URLReader {
 	 * @throws IOException
 	 */
 	public String readURL(String urlString) throws IOException {
-		Logger.log(Logger.LogLevel.DEBUG, "Connecting to " + urlString + ".");
+		logger.debug("Connecting to " + urlString + ".");
 		
 		// Connect to URL
 		URL url = new URL(urlString);
@@ -34,7 +38,7 @@ public class URLReader {
 
 		in.close();
 
-		Logger.log(Logger.LogLevel.TRACE, "Got response from " + urlString + ".");
+		logger.trace("Got response from " + urlString + ".");
 		
 		return result.toString();
 	}
