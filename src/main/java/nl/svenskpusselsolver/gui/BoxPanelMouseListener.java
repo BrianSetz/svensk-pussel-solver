@@ -57,17 +57,25 @@ public class BoxPanelMouseListener implements MouseListener {
 				currentValue);
 
 		logger.debug("Result from dialog: " + result + " (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-
-		// Format letter
-		if(result == "" || result == null) {
+		
+		// Cancel button
+		if(result == null)
 			return;
-		} else
-		if (box instanceof LetterBox && result.length() > 0) {
+		
+		// Empty result, replace with space
+		if(result.length() <= 0)
+			result = " ";
+			
+		
+		// Format letter				
+		if (box instanceof LetterBox) {
 			result = String.valueOf(result.charAt(0)).toUpperCase();
 			boxPanel.setBox(new LetterBox(box.getXCoordinate(), box.getYCoordinate(), result.charAt(0)));
-		} else {
+		} else if(box instanceof WordBox) {
 			WordBox wordBox = (WordBox) box;
 			boxPanel.setBox(new WordBox(box.getXCoordinate(), box.getYCoordinate(), result, wordBox.getDirection()));
+		} else {
+			return;
 		}
 	}
 
