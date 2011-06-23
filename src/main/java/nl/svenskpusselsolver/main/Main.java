@@ -1,5 +1,9 @@
 package nl.svenskpusselsolver.main;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 import nl.svenskpusselsolver.dataobjects.Box;
 import nl.svenskpusselsolver.dataobjects.LetterBox;
 import nl.svenskpusselsolver.dataobjects.StaticBox;
@@ -7,14 +11,25 @@ import nl.svenskpusselsolver.dataobjects.WordBox;
 import nl.svenskpusselsolver.gui.PuzzleFrame;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 public class Main {
 	private final static Logger logger = Logger.getLogger(Main.class);
 	
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {		
+		Properties logProperties = new Properties();
+
+		try {
+			logProperties.load(new FileInputStream("src/main/resources/log4j.properties"));
+		} catch (IOException e) {
+			logger.error("Unable to load logging properties", e);
+		}
+
+		PropertyConfigurator.configure(logProperties);
+		logger.info("Logging initialized.");
 		
-		logger.trace("Initializing demo puzzle.");
 		
+		logger.trace("Initializing demo puzzle.");		
 		Box[][] grid = new Box[10][10];
 
 		grid[0][0] = new StaticBox(0, 0);
