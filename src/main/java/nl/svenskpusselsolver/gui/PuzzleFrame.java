@@ -21,6 +21,8 @@ import org.apache.log4j.Logger;
  * This is the main frame of the puzzle GUI.
  */
 public class PuzzleFrame extends JFrame {
+	private static final long serialVersionUID = 1L;
+
 	private final static Logger logger = Logger.getLogger(PuzzleFrame.class);
 	
 	private Container contentPane;

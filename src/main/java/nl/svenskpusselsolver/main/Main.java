@@ -17,16 +17,7 @@ public class Main {
 	private final static Logger logger = Logger.getLogger(Main.class);
 	
 	public static void main(String[] args) throws Exception {		
-		Properties logProperties = new Properties();
-
-		try {
-			logProperties.load(new FileInputStream("src/main/resources/log4j.properties"));
-		} catch (IOException e) {
-			logger.error("Unable to load logging properties", e);
-		}
-
-		PropertyConfigurator.configure(logProperties);
-		logger.info("Logging initialized.");
+		initializeLogging();
 		
 		
 		logger.trace("Initializing demo puzzle.");		
@@ -144,5 +135,18 @@ public class Main {
 
 		
 		new PuzzleFrame(grid);
+	}
+
+	private static void initializeLogging() {
+		Properties logProperties = new Properties();
+
+		try {
+			logProperties.load(new FileInputStream("src/main/resources/log4j.properties"));
+		} catch (IOException e) {
+			logger.error("Unable to load logging properties", e);
+		}
+
+		PropertyConfigurator.configure(logProperties);
+		logger.info("Logging initialized.");
 	}
 }

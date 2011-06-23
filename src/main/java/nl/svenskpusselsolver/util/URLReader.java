@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import nl.svenskpusselsolver.solver.BruteForceSolver;
-
 import org.apache.log4j.Logger;
 
 public class URLReader {
