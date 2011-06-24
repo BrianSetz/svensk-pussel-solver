@@ -16,10 +16,11 @@ import org.apache.log4j.PropertyConfigurator;
 public class Main {
 	private final static Logger logger = Logger.getLogger(Main.class);
 	
-	public static void main(String[] args) throws Exception {		
+	public static void main(String[] args) throws Exception {
+		// Initialize log4j
 		initializeLogging();
 		
-		
+		// Build demo puzzle
 		logger.trace("Initializing demo puzzle.");		
 		Box[][] grid = new Box[10][10];
 
@@ -133,7 +134,7 @@ public class Main {
         grid[8][9] = new LetterBox(8, 9);
         grid[9][9] = new LetterBox(9, 9);
 
-		
+		// Initialize GUI with demo puzzle
 		new PuzzleFrame(grid);
 	}
 

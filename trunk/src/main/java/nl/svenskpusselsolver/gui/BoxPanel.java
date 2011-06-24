@@ -19,7 +19,7 @@ import nl.svenskpusselsolver.dataobjects.WordBox;
 import org.apache.log4j.Logger;
 
 /**
- * Represents a box within the puzzle.
+ * Represents a GUI box within the puzzle.
  */
 public class BoxPanel extends JPanel {	
 	private static final long serialVersionUID = 1L;
@@ -50,7 +50,7 @@ public class BoxPanel extends JPanel {
 		textPane.addMouseListener(bpml);
 		
 		// Create directionlabel
-		this.directionLabel = new JLabel("oi");
+		this.directionLabel = new JLabel("");
 		directionLabel.addMouseListener(bpml);		
 		
 		// Center text in textpane
@@ -63,8 +63,7 @@ public class BoxPanel extends JPanel {
 		this.add(textPane);
 		this.add(directionLabel);		
 		this.addMouseListener(bpml);
-		this.setPreferredSize(new Dimension(75, 75)); 	// Makes the layout
-														// manager happy
+		this.setPreferredSize(new Dimension(75, 75)); 	// Makes the layout manager happy
 		this.updateType(box); // Update
 		
 		logger.info("BoxPanel built (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
@@ -84,6 +83,8 @@ public class BoxPanel extends JPanel {
 	 * @param box Box object to set.
 	 */
 	public void setBox(Box box) {
+		logger.trace("Setting box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+		
 		if (box instanceof WordBox) {
 			WordBox wordBox = (WordBox) box;
 			textPane.setText(wordBox.getWord());
@@ -93,14 +94,16 @@ public class BoxPanel extends JPanel {
 		
 		updateType(box);
 	}
+	
+	// TODO: Move cycling mechanism from BPML to this place. Make method below private and figure out what the above method does.
+	
 	/**
 	 * Update the type of the box.
 	 * @param box New box.
 	 */
 	public void updateType(Box box) {
 		logger.trace("Updating box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-		//type = newType;
-
+		
 		// Update box to new type
 		if(box instanceof StaticBox) {
 			logger.debug("Updating box type to STATICBOX (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
@@ -116,6 +119,7 @@ public class BoxPanel extends JPanel {
 			
 			WordBox wordBox = (WordBox) box;
 			WordBox.Direction direction = wordBox.getDirection();
+			wordBox.setWord(this.textPane.getText());
 			
 			switch (direction) {
 				case UP:
@@ -144,6 +148,11 @@ public class BoxPanel extends JPanel {
 			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 40));
 			this.textPane.setVisible(true);
 			this.directionLabel.setVisible(false);
+								
+			if(this.textPane.getText().length() > 0) {
+				LetterBox letterBox = (LetterBox) box;
+				letterBox.setLetter(this.textPane.getText().charAt(0));
+			}
 		}
 
 		this.box = box;

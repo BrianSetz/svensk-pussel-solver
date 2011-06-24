@@ -1,5 +1,8 @@
 package nl.svenskpusselsolver.dataobjects;
 
+/**
+ * The letterbox contains a single letter.
+ */
 public class LetterBox extends Box {
 	private char letter;
 	

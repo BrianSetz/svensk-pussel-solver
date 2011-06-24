@@ -20,10 +20,8 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 	/**
 	 * Return the answer(s) for a given word and length.
 	 * 
-	 * @param word
-	 *            Word to find answers for.
-	 * @param length
-	 *            Length of the answer, -1 for no length.
+	 * @param word Word to find answers for.
+	 * @param length Length of the answer, -1 for no length.
 	 * @return List of answers.
 	 */
 	public List<String> getAnswers(String word, int length) {
@@ -37,6 +35,7 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 			logger.error("Downloading answers for " + word + " failed: " + e.getMessage() + ".", e);
 		}
 		
+		// Extract answers from HTML
 		Pattern pagePattern = Pattern.compile("(background-color:#ddd>(<big){0})(((<font)|[^<]).*?)</td>");
 		Pattern wordPattern = Pattern.compile("(\\s|>|^)([^ -<>]+?)(\\s|<|$)");
 		
@@ -67,20 +66,16 @@ public class MijnWoordenBoekDotNL implements PuzzleDictionary {
 	/**
 	 * Create a connection URL based on word and length.
 	 * 
-	 * @param word
-	 *            Word to find answers for.
-	 * @param length
-	 *            Length of the answer, -1 for no length.
+	 * @param word Word to find answers for.
+	 * @param length Length of the answer, -1 for no length.
 	 * @return Connection URL
 	 */
 	private String getConnectionURL(String word, int length) {
 		word = word.replace(' ', '+');
 
 		if (length > 0)
-			return "http://www.mijnwoordenboek.nl/puzzelwoordenboek/?zoek="
-					+ word + "&letters=" + length;
+			return "http://www.mijnwoordenboek.nl/puzzelwoordenboek/?zoek=" + word + "&letters=" + length;
 		else
-			return "http://www.mijnwoordenboek.nl/puzzelwoordenboek/?zoek="
-					+ word;
+			return "http://www.mijnwoordenboek.nl/puzzelwoordenboek/?zoek=" + word;
 	}
 }

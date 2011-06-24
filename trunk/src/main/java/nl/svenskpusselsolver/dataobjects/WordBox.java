@@ -1,5 +1,9 @@
 package nl.svenskpusselsolver.dataobjects;
 
+/**
+ * The word box contains the word that requires
+ * an answer. It also has a direction.
+ */
 public class WordBox extends Box {
 	
 	public enum Direction { UP, RIGHT, DOWN, LEFT }
