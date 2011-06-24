@@ -1,5 +1,9 @@
 package nl.svenskpusselsolver.dataobjects;
 
+/**
+ * Basis box in a Zweedse Puzzel. Every box has 
+ * a x,y coordinate.
+ */
 public abstract class Box {
 	private int xCoordinate;
 	private int yCoordinate;

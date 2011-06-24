@@ -13,6 +13,9 @@ import nl.svenskpusselsolver.dictionary.PuzzleDictionary;
 
 import org.apache.log4j.Logger;
 
+/**
+ * A semi-bruteforce solver that has a little intelligence. 
+ */
 public class BruteForceSolver implements Solver {
 	private final static Logger logger = Logger.getLogger(BruteForceSolver.class);
 	
@@ -70,64 +73,66 @@ public class BruteForceSolver implements Solver {
 			changesInGrid = false;
 			for (int x = 0; x < grid.length; x++) {
 				for (int y = 0; y < grid[0].length; y++) {
-					// If the current item in the grid is a WordBox
-					if (grid[x][y] instanceof WordBox) {
-						WordBox wordBox = (WordBox) grid[x][y];
-						List<String> possibleAnswers = possibleAnswersGrid[x][y];
-						logger.trace("Checking answers for " + wordBox.getWord() + ".");
+					// If the current item in the grid is not a WordBox
+					if (!(grid[x][y] instanceof WordBox)) {
+						continue;
+					}
+					
+					// Get answers found for the WordBox
+					WordBox wordBox = (WordBox) grid[x][y];
+					List<String> possibleAnswers = possibleAnswersGrid[x][y];
+					logger.trace("Checking answers for " + wordBox.getWord() + ".");
 
-						// No answers in list
-						if (possibleAnswers.size() <= 0) {
-							logger.trace("Skipping " + wordBox.getWord() + ", already answered or no answers available.");
-							continue;
+					// No answers in list
+					if (possibleAnswers.size() <= 0) {
+						logger.trace("Skipping " + wordBox.getWord() + ", already answered or no answers available.");
+						continue;
+					}
+
+					// Count possible answers
+					int answerCount = 0;
+					for (Iterator<String> iter = possibleAnswers.iterator(); iter.hasNext();) {
+						String answer = iter.next();
+						// If word is a possible answer, add it to the count
+						if (isPossibleAnswer(wordBox, answer)) {
+							logger.debug("Found a word with a possible answer, for " + wordBox.getWord() + ": " + answer + ".");
+							answerCount++;
+						// If word is not a possible answer, remove it
+						} else {
+							logger.trace("Answer will not fit for" + wordBox.getWord() + ". removing: " + answer + ".");
+							iter.remove();
 						}
+					}
 
-						// Count possible answers
-						int answerCount = 0;
-						for (Iterator<String> iter = possibleAnswers.iterator(); iter
-								.hasNext();) {
-							String answer = iter.next();
-							// If word is a possible answer, add it to the count
-							if (isPossibleAnswer(wordBox, answer)) {
-								logger.debug("Found a word with a possible answer, for " + wordBox.getWord() + ": " + answer + ".");
-								answerCount++;
-							// If word is not a possible answer, remove it
-							} else {
-								logger.trace("Answer will not fit for" + wordBox.getWord() + ". removing: " + answer + ".");
-								iter.remove();
+					// If there is one possible answer and the answer has new letters,
+					// use it and remove it from the list
+					if (answerCount == 1 && setAnswer(wordBox, possibleAnswers.get(0))) {
+						logger.debug("Found a word with a single answer, for " + wordBox.getWord() + ": " + possibleAnswers.get(0) + ".");
+						changesInGrid = true;
+						possibleAnswers.remove(0);
+					// If not, check if there are any letters that can be filled in
+					} else if (answerCount > 1) {
+						Iterator<String> iter = possibleAnswers.iterator();
+						char[] possibleLetters = iter.next().toCharArray();
+
+						// Loop all possible answers
+						while (iter.hasNext()) {
+							char[] answer = iter.next().toCharArray();
+
+							// Loop all letters in the answers, replace a letter with a space if it doesn't fit
+							for (int i = 0; i < possibleLetters.length; i++) {
+								if (possibleLetters[i] != answer[i])
+									possibleLetters[i] = ' ';
 							}
 						}
 
-						// If there is one possible answer, use it and remove it from the list
-						if (answerCount == 1) {
-							logger.debug("Found a word with a single answer, for " + wordBox.getWord() + ": " + possibleAnswers.get(0) + ".");
-							changesInGrid = true;
-							if(setAnswer(wordBox, possibleAnswers.get(0)))
-								possibleAnswers.remove(0);
-						// If not, check if there are any letters that can be filled in
-						} else if (answerCount > 1) {
-							Iterator<String> iter = possibleAnswers.iterator();
-							char[] possibleLetters = iter.next().toCharArray();
-
-							// Loop all possible answers
-							while (iter.hasNext()) {
-								char[] answer = iter.next().toCharArray();
-
-								// Loop all letters in the answers, replace a letter with a space if it doesn't fit
-								for (int i = 0; i < possibleLetters.length; i++) {
-									if (possibleLetters[i] != answer[i])
-										possibleLetters[i] = ' ';
-								}
-							}
-
-							// Check if the possible answer does not contain spaces
-							if (!new String(possibleLetters).matches(" *")) {
-								if (setAnswer(wordBox, possibleLetters)) {
-									changesInGrid = true;
-								}
+						// Check if the possible answer does not contain spaces
+						if (!new String(possibleLetters).matches(" *")) {
+							if (setAnswer(wordBox, possibleLetters)) {
+								changesInGrid = true;
 							}
 						}
-					} // End instance of WordBox
+					}
 				} // End Y loop
 			} // End X loop
 		} // End while loop

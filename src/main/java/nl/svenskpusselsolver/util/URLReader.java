@@ -14,8 +14,7 @@ public class URLReader {
 	/**
 	 * Read contents at URL
 	 * 
-	 * @param urlString
-	 *            URL to read from
+	 * @param urlString URL to read from
 	 * @return Contents at URL
 	 * @throws IOException
 	 */

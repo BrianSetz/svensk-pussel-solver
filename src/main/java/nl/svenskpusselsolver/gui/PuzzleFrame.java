@@ -18,7 +18,7 @@ import nl.svenskpusselsolver.solver.BruteForceSolver;
 import org.apache.log4j.Logger;
 
 /**
- * This is the main frame of the puzzle GUI.
+ * The main frame of the puzzle GUI.
  */
 public class PuzzleFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -63,7 +63,9 @@ public class PuzzleFrame extends JFrame {
 					}
 				}
 				
+				// Get solved grid
 				Box[][] newGrid = new BruteForceSolver().solvePuzzle(currentGrid);
+				
 				for (int y = 0; y < newGrid[0].length; y++) {
 					for (int x = 0; x < newGrid.length; x++) {
 						boxPanelGrid[x][y].setBox(newGrid[x][y]);
@@ -99,8 +101,6 @@ public class PuzzleFrame extends JFrame {
 	public PuzzleFrame(Box[][] grid) {	
 		this();
 		
-		//this.grid = grid;
-		
 		logger.trace("Initializing grid with content.");
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
@@ -121,8 +121,8 @@ public class PuzzleFrame extends JFrame {
 		contentPane.setBackground(Color.black);
 		contentPane.setLayout(new GridLayout(x, y, 1, 1));
 
-		logger.trace("Creating boxes for grid.");
 		// Create all boxes
+		logger.trace("Creating boxes for grid.");
 		for (int i = 0; i < x; i++) {
 			for (int j = 0; j < y; j++) {
 				BoxPanel bp = new BoxPanel(new LetterBox(i, j));
