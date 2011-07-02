@@ -156,7 +156,7 @@ public class BoxPanel extends JPanel {
 					this.box = new WordBox(box.getXCoordinate(), box.getYCoordinate(), boxValue, WordBox.Direction.LEFT);
 					break;
 				case LEFT:
-					this.box = new LetterBox(box.getXCoordinate(), box.getYCoordinate(), boxValue.charAt(0));
+					this.box = new LetterBox(box.getXCoordinate(), box.getYCoordinate(), boxValue.toUpperCase().charAt(0));
 					break;
 			}
 		} else if(box instanceof LetterBox) {
