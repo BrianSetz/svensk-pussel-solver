@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.swing.UIManager;
+
 import nl.svenskpusselsolver.dataobjects.Box;
 import nl.svenskpusselsolver.dataobjects.LetterBox;
 import nl.svenskpusselsolver.dataobjects.StaticBox;
@@ -133,7 +135,10 @@ public class Main {
         grid[7][9] = new LetterBox(7, 9);
         grid[8][9] = new LetterBox(8, 9);
         grid[9][9] = new LetterBox(9, 9);
-
+        
+        // Set L&F
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        
 		// Initialize GUI with demo puzzle
 		new PuzzleFrame(grid);
 	}

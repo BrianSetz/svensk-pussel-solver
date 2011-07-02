@@ -28,6 +28,7 @@ public class BoxPanel extends JPanel {
 	
 	private JTextPane textPane; // Text container
 	private JLabel directionLabel; // Direction of wordbox
+	private String boxValue = " ";
 	private Box box;
 	
 	/**
@@ -39,7 +40,7 @@ public class BoxPanel extends JPanel {
 		super();
 		
 		logger.trace("Building BoxPanel (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-
+		
 		// Initialize box
 		BoxPanelMouseListener bpml = new BoxPanelMouseListener(this);
 
@@ -59,14 +60,152 @@ public class BoxPanel extends JPanel {
 		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
 		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 
+		// Set box
+		this.box = box;
+		
 		// Init panel
 		this.add(textPane);
 		this.add(directionLabel);		
 		this.addMouseListener(bpml);
 		this.setPreferredSize(new Dimension(75, 75)); 	// Makes the layout manager happy
-		this.updateType(box); // Update
+		this.refreshUI(); // Update
 		
 		logger.info("BoxPanel built (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+	}
+	
+	/**
+	 * Update the type of the box.
+	 * @param box New box.
+	 */
+	public void refreshUI() {
+		logger.trace("Refreshing box at (" + this.box.getXCoordinate() + "," + this.box.getYCoordinate() + ").");
+		
+		// Refresh box
+		if(this.box instanceof StaticBox) {
+			logger.debug("Refreshing box of type STATICBOX (" + this.box.getXCoordinate() + "," + this.box.getYCoordinate() + ").");
+			
+			this.setBackground(Color.gray);
+			this.textPane.setVisible(false);
+			this.textPane.setText("");
+			this.directionLabel.setVisible(false);
+		} else if(this.box instanceof WordBox) {
+			this.setBackground(Color.lightGray);
+			this.textPane.setBackground(Color.lightGray);
+			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));			
+			this.textPane.setVisible(true);
+			this.directionLabel.setVisible(true);
+			
+			WordBox wordBox = (WordBox) this.box;
+			WordBox.Direction direction = wordBox.getDirection();
+			this.textPane.setText(wordBox.getWord());
+			
+			switch (direction) {
+				case UP:
+					logger.debug("Refreshing box of type WORDBOX, UP (" + this.box.getXCoordinate() + "," + this.box.getYCoordinate() + ").");
+					this.directionLabel.setText("^");
+					break;
+				case RIGHT:
+					logger.debug("Refreshing box of type WORDBOX, RIGHT (" + this.box.getXCoordinate() + "," + this.box.getYCoordinate() + ").");
+					this.directionLabel.setText(">");
+					break;
+				case DOWN:
+					logger.debug("Refreshing box of type WORDBOX, DOWN (" + this.box.getXCoordinate() + "," + this.box.getYCoordinate() + ").");
+					this.directionLabel.setText("v");
+					break;
+				case LEFT:
+					logger.debug("Refreshing box of type to WORDBOX, LEFT (" + this.box.getXCoordinate() + "," + this.box.getYCoordinate() + ").");
+					this.directionLabel.setText("<");
+					break;
+			}
+			
+		} else if(this.box instanceof LetterBox) {
+			logger.debug("Refreshing box of type LETTERBOX (" + this.box.getXCoordinate() + "," + this.box.getYCoordinate() + ").");
+			
+			this.setBackground(Color.white);
+			this.textPane.setBackground(Color.white);
+			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 40));
+			this.textPane.setVisible(true);
+			this.directionLabel.setVisible(false);
+
+			LetterBox letterBox = (LetterBox) this.box;
+			this.textPane.setText(Character.toString(letterBox.getLetter()));
+		}
+		
+		this.updateUI();
+	}
+
+	/**
+	 * Cycle the type of the box
+	 */
+	public void cycleType() {
+		// Cycle box type and update box to new type
+		if(box instanceof StaticBox) {
+			this.box = new WordBox(box.getXCoordinate(), box.getYCoordinate(), boxValue, WordBox.Direction.UP);
+		} else if(box instanceof WordBox) {
+			WordBox wordBox = (WordBox) box;
+			WordBox.Direction direction = wordBox.getDirection();
+			
+			switch (direction) {
+				case UP:
+					this.box = new WordBox(box.getXCoordinate(), box.getYCoordinate(), boxValue, WordBox.Direction.RIGHT);
+					break;
+				case RIGHT:
+					this.box = new WordBox(box.getXCoordinate(), box.getYCoordinate(), boxValue, WordBox.Direction.DOWN);
+					break;
+				case DOWN:
+					this.box = new WordBox(box.getXCoordinate(), box.getYCoordinate(), boxValue, WordBox.Direction.LEFT);
+					break;
+				case LEFT:
+					this.box = new LetterBox(box.getXCoordinate(), box.getYCoordinate(), boxValue.charAt(0));
+					break;
+			}
+		} else if(box instanceof LetterBox) {
+			this.box = new StaticBox(box.getXCoordinate(), box.getYCoordinate());
+		}
+		
+		refreshUI();
+	}
+	
+	/**
+	 * Set the new box value of the boxpanel
+	 * @param boxValue New box value
+	 */
+	public void setBoxValue(String boxValue) {
+		logger.trace("Setting box value of box at (" + this.box.getXCoordinate() + "," + this.box.getYCoordinate() + ").");		
+		
+		// Check for empty string
+		if(boxValue.length() <= 0)
+			boxValue = " ";
+		
+		this.boxValue = boxValue;
+		
+		// Set value in box
+		if(this.box instanceof WordBox) {			
+			logger.debug("Setting box value of type WORDBOX (" + this.box.getXCoordinate() + "," + this.box.getYCoordinate() + ").");
+			
+			WordBox wordBox = (WordBox) this.box;
+			wordBox.setWord(boxValue);
+		} else if(this.box instanceof LetterBox) {
+			logger.debug("Setting box value of type LETTERBOX (" + this.box.getXCoordinate() + "," + this.box.getYCoordinate() + ").");
+
+			LetterBox letterBox = (LetterBox) this.box;
+			letterBox.setLetter(boxValue.toUpperCase().charAt(0));
+		} else {
+			return;
+		}
+		
+		refreshUI();
+	}
+
+	/**
+	 * Get the current value of the boxpanel
+	 * @return Box value
+	 */
+	public String getBoxValue() {
+		if(boxValue == null || boxValue.length() <= 0)
+			return " ";
+		
+		return boxValue;
 	}
 
 	/**
@@ -84,79 +223,18 @@ public class BoxPanel extends JPanel {
 	 */
 	public void setBox(Box box) {
 		logger.trace("Setting box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-		
-		if (box instanceof WordBox) {
-			WordBox wordBox = (WordBox) box;
-			textPane.setText(wordBox.getWord());
-		} else if (box instanceof LetterBox) {
-			textPane.setText(String.valueOf(((LetterBox)box).getLetter()).toUpperCase());
-		}
-		
-		updateType(box);
-	}
 	
-	// TODO: Move cycling mechanism from BPML to this place. Make method below private and figure out what the above method does.
-	
-	/**
-	 * Update the type of the box.
-	 * @param box New box.
-	 */
-	public void updateType(Box box) {
-		logger.trace("Updating box type (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-		
-		// Update box to new type
-		if(box instanceof StaticBox) {
-			logger.debug("Updating box type to STATICBOX (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-			this.setBackground(Color.gray);
-			this.textPane.setVisible(false);
-			this.directionLabel.setVisible(false);
-		} else if(box instanceof WordBox) {
-			this.setBackground(Color.lightGray);
-			this.textPane.setBackground(Color.lightGray);
-			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));			
-			this.textPane.setVisible(true);
-			this.directionLabel.setVisible(true);
-			
-			WordBox wordBox = (WordBox) box;
-			WordBox.Direction direction = wordBox.getDirection();
-			wordBox.setWord(this.textPane.getText());
-			
-			switch (direction) {
-				case UP:
-					logger.debug("Updating box type to WORDBOX, UP (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-					this.directionLabel.setText("^");
-					break;
-				case RIGHT:
-					logger.debug("Updating box type to WORDBOX, RIGHT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-					this.directionLabel.setText(">");
-					break;
-				case DOWN:
-					logger.debug("Updating box type to WORDBOX, DOWN (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-					this.directionLabel.setText("v");
-					break;
-				case LEFT:
-					logger.debug("Updating box type to WORDBOX, LEFT (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-					this.directionLabel.setText("<");
-					break;
-			}
-			
-		} else if(box instanceof LetterBox) {
-			logger.debug("Updating box type to LETTERBOX (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-			
-			this.setBackground(Color.white);
-			this.textPane.setBackground(Color.white);
-			this.textPane.setFont(new Font(Font.DIALOG, Font.PLAIN, 40));
-			this.textPane.setVisible(true);
-			this.directionLabel.setVisible(false);
-								
-			if(this.textPane.getText().length() > 0) {
-				LetterBox letterBox = (LetterBox) box;
-				letterBox.setLetter(this.textPane.getText().charAt(0));
-			}
-		}
-
 		this.box = box;
 		
-		this.updateUI();
+		// Update boxValue
+		if(this.box instanceof WordBox) {			
+			WordBox wordBox = (WordBox) this.box;
+			setBoxValue(wordBox.getWord());
+		} else if(this.box instanceof LetterBox) {
+			LetterBox letterBox = (LetterBox) this.box;
+			setBoxValue(Character.toString(letterBox.getLetter()));
+		}
+		
+		refreshUI();
 	}
 }
