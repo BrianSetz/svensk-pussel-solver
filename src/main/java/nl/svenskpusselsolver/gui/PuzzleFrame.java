@@ -13,6 +13,9 @@ import javax.swing.JMenuItem;
 
 import nl.svenskpusselsolver.dataobjects.Box;
 import nl.svenskpusselsolver.dataobjects.LetterBox;
+import nl.svenskpusselsolver.dataobjects.StaticBox;
+import nl.svenskpusselsolver.gui.panel.BoxPanel;
+import nl.svenskpusselsolver.gui.panel.LetterBoxPanel;
 import nl.svenskpusselsolver.solver.BruteForceSolver;
 
 import org.apache.log4j.Logger;
@@ -21,25 +24,20 @@ import org.apache.log4j.Logger;
  * The main frame of the puzzle GUI.
  */
 public class PuzzleFrame extends JFrame {
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 3103179150718872483L;
 	private final static Logger logger = Logger.getLogger(PuzzleFrame.class);
 	
-	private Container contentPane;
-	private BoxPanel[][] boxPanelGrid;
-	//private Box[][] grid;
+	private static BoxPanelManager boxPanelManager;
 	
-	/**
-	 * Puzzle frame contains all the boxes.
-	 */
-	public PuzzleFrame() {
+	private Container contentPane;	
+	
+	private PuzzleFrame() {
 		logger.trace("Building PuzzleFrame.");
 		
-		contentPane = this.getContentPane();
-		
+		contentPane = this.getContentPane();		
+				
 		logger.trace("Building menu.");
-		this.initializePuzzle(10, 10);
-
+		
 		// Build MenuBar
 		JMenuBar bar = new JMenuBar();
 		this.setJMenuBar(bar);
@@ -55,20 +53,27 @@ public class PuzzleFrame extends JFrame {
 		solveItem.addActionListener(new ActionListener() {		
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Box[][] currentGrid = new Box[boxPanelGrid.length][boxPanelGrid[0].length];
+				BoxPanel[][] currentBoxPanelGrid = boxPanelManager.getBoxPanelGrid();
+				Box[][] currentBoxGrid = new Box[currentBoxPanelGrid.length][currentBoxPanelGrid[0].length];
 				
-				for (int x = 0; x < boxPanelGrid.length; x++) {
-					for (int y = 0; y < boxPanelGrid[0].length; y++) {			
-						currentGrid[x][y] = boxPanelGrid[x][y].getBox();
+				for (int x = 0; x < currentBoxPanelGrid.length; x++) {
+					for (int y = 0; y < currentBoxPanelGrid[0].length; y++) {			
+						currentBoxGrid[x][y] = currentBoxPanelGrid[x][y].getBox();
 					}
 				}
 				
 				// Get solved grid
-				Box[][] newGrid = new BruteForceSolver().solvePuzzle(currentGrid);
+				Box[][] newGrid = new BruteForceSolver().solvePuzzle(currentBoxGrid);
 				
 				for (int y = 0; y < newGrid[0].length; y++) {
 					for (int x = 0; x < newGrid.length; x++) {
-						boxPanelGrid[x][y].setBox(newGrid[x][y]);
+						BoxPanel panel = currentBoxPanelGrid[x][y];
+						if(! (panel instanceof LetterBoxPanel))
+							continue;
+						
+						LetterBoxPanel letterBoxPanel = (LetterBoxPanel) panel;
+						LetterBox letterBox = (LetterBox) newGrid[x][y];
+						letterBoxPanel.updateLetter(letterBox.getLetter());
 					}
 				}	
 			}	
@@ -92,43 +97,52 @@ public class PuzzleFrame extends JFrame {
 		logger.trace("Initializing frame.");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Svensk Pussel Solver");
-		this.pack();
 		this.setVisible(true);
 		
 		logger.info("PuzzleFrame built.");
 	}
 
-	public PuzzleFrame(Box[][] grid) {	
+	public PuzzleFrame(int xLength, int yLength) {
 		this();
+		this.initializePuzzle(xLength, yLength);
+		
+		// Create grid with static boxes only
+		Box[][] grid = new Box[xLength][yLength];
+		for (int x = 0; x < xLength; x++) {
+			for (int y = 0; y < yLength; y++) {			
+				grid[x][y] = new StaticBox(x, y);
+			}
+		}
+		
+		boxPanelManager.setBoxPanelGrid(grid);
+		
+		this.pack();
+	}
+	
+	public PuzzleFrame(Box[][] grid) {	
+		this();		
+		this.initializePuzzle(grid.length, grid[0].length);
 		
 		logger.trace("Initializing grid with content.");
-		for (int x = 0; x < grid.length; x++) {
-			for (int y = 0; y < grid[0].length; y++) {
-				boxPanelGrid[x][y].setBox(grid[x][y]);
-			}
-		}		
+		
+		boxPanelManager.setBoxPanelGrid(grid);
+		
+		this.pack();
 	}
+	
+	public static BoxPanelManager getBoxPanelManager() {
+		return boxPanelManager;
+	}
+	
 	/**
 	 * Initialize puzzle grid
 	 * 
-	 * @param x
-	 *            Boxes on x-axis
-	 * @param y
-	 *            Boxes on y-axis
+	 * @param xLength Boxes on x-axis
+	 * @param yLength Boxes on y-axis
 	 */
-	private void initializePuzzle(int x, int y) {
-		boxPanelGrid = new BoxPanel[x][y];		
+	private void initializePuzzle(int xLength, int yLength) {
+		boxPanelManager = new BoxPanelManager(contentPane, xLength, yLength);
 		contentPane.setBackground(Color.black);
-		contentPane.setLayout(new GridLayout(x, y, 1, 1));
-
-		// Create all boxes
-		logger.trace("Creating boxes for grid.");
-		for (int i = 0; i < x; i++) {
-			for (int j = 0; j < y; j++) {
-				BoxPanel bp = new BoxPanel(new LetterBox(i, j));
-				contentPane.add(bp); // New box
-				boxPanelGrid[j][i] = bp; // Store reference in grid, flip x and y for Gridbag layout 
-			}
-		}
+		contentPane.setLayout(new GridLayout(xLength, yLength, 3, 3));
 	}
 }
