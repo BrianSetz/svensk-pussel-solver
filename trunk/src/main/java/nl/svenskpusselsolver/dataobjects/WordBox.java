@@ -11,7 +11,7 @@ public class WordBox extends Box {
 	private String word;
 	private Direction direction;
 	
-	public WordBox(int xCoordinate, int yCoordinate) {
+	private WordBox(int xCoordinate, int yCoordinate) {
 		super(xCoordinate, yCoordinate);
 	}
 	

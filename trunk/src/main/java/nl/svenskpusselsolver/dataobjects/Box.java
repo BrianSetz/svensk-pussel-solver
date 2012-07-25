@@ -1,7 +1,7 @@
 package nl.svenskpusselsolver.dataobjects;
 
 /**
- * Basis box in a Zweedse Puzzel. Every box has 
+ * Basic box in a Zweedse Puzzel. Every box has 
  * a x,y coordinate.
  */
 public abstract class Box {

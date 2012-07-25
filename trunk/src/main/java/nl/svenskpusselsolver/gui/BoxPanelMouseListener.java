@@ -4,11 +4,8 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JOptionPane;
-
 import nl.svenskpusselsolver.dataobjects.Box;
-import nl.svenskpusselsolver.dataobjects.LetterBox;
-import nl.svenskpusselsolver.dataobjects.WordBox;
+import nl.svenskpusselsolver.gui.panel.BoxPanel;
 
 import org.apache.log4j.Logger;
 
@@ -35,38 +32,15 @@ public class BoxPanelMouseListener implements MouseListener {
 			logger.trace("Left button clicked (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
 			
 			// Cycle box type
-			boxPanel.cycleType();
+			PuzzleFrame.getBoxPanelManager().cycle(boxPanel);
 		} else if ((e.getModifiers() & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) { // Middle click
 			logger.trace("Middle button clicked (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
+			
+			boxPanel.handleMiddleClick();
 		} else if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) { // Right click
 			logger.trace("Right button clicked (" + box.getXCoordinate() + "," + box.getYCoordinate() + ")."); 
 						
-			// Determine message
-			String message = "";
-			String currentValue = boxPanel.getBoxValue();
-			if (box instanceof LetterBox) {
-				message = "Enter a letter ";
-			} else if(box instanceof WordBox) {
-				message = "Enter a word ";
-			} else {
-				return;
-			}
-			
-			logger.trace("Showing dialog (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-			
-			// Get word or letter
-			String result = (String) JOptionPane.showInputDialog(boxPanel,
-					message, message, JOptionPane.PLAIN_MESSAGE, null, null,
-					currentValue);
-			
-			logger.debug("Result from dialog: " + result + " (" + box.getXCoordinate() + "," + box.getYCoordinate() + ").");
-			
-			// Cancel button
-			if(result == null)
-				return;
-			
-			// Set result
-			boxPanel.setBoxValue(result);
+			boxPanel.handleRightClick();
 		} 
 	}
 
